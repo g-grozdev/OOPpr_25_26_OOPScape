@@ -6,6 +6,7 @@
 
 class Character : public Target, public IMoveable
 {
+protected:
 	Weapon wp;
 
 public:

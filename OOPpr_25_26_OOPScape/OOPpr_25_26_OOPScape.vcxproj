@@ -127,16 +127,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="Damageable.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Hero.cpp" />
     <ClCompile Include="OOPpr_25_26_OOPScape.cpp" />
     <ClCompile Include="Position.cpp" />
+    <ClCompile Include="Target.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Character.h" />
     <ClInclude Include="Damageable.h" />
     <ClInclude Include="Effect.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Hero.h" />
+    <ClInclude Include="IMoveable.h" />
     <ClInclude Include="Position.h" />
+    <ClInclude Include="Target.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
