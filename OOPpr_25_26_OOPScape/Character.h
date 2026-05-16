@@ -13,5 +13,8 @@ public:
 	~Character() override = default;
 
 	Weapon attack(int direction);
+
+	const Weapon& get_weapon() const;
+	void set_weapon(const Weapon& _wp);
 };
 

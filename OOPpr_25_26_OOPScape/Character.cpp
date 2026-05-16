@@ -7,3 +7,13 @@ Weapon Character::attack(int direction)
 {
 	return Weapon(wp, Position(x, y), direction);
 }
+
+const Weapon& Character::get_weapon() const
+{
+	return wp;
+}
+
+void Character::set_weapon(const Weapon& _wp)
+{
+	wp = _wp;
+}
