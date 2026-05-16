@@ -1,6 +1,7 @@
 #pragma once
 class Damageable
 {
+protected:
 	int hp;
 	const int MAX_HP;
 

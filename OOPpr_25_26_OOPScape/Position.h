@@ -2,6 +2,7 @@
 
 class Position
 {
+protected:
 	int x;
 	int y;
 	static int MAX;
