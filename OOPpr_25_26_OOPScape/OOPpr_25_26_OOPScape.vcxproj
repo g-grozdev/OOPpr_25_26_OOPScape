@@ -127,11 +127,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Damageable.cpp" />
     <ClCompile Include="OOPpr_25_26_OOPScape.cpp" />
     <ClCompile Include="Position.cpp" />
+    <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Damageable.h" />
+    <ClInclude Include="Effect.h" />
     <ClInclude Include="Position.h" />
+    <ClInclude Include="Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
