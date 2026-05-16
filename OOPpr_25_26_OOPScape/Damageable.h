@@ -9,7 +9,8 @@ public:
 	Damageable(int _hp, int _mhp);
 	virtual ~Damageable() = default;
 
-	virtual void take_damage(int dmg) final;
+	virtual void take_damage(int dmg);
+	virtual void heal(int hl);
 	int get_hp() const;
 	void set_hp(int _hp);
 };

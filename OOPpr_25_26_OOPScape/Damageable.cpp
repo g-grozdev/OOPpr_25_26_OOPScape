@@ -11,6 +11,12 @@ void Damageable::take_damage(int dmg)
 	hp -= dmg;
 }
 
+void Damageable::heal(int hl)
+{
+	if (hp + hl > MAX_HP) hp = MAX_HP;
+	else hp += hl;
+}
+
 int Damageable::get_hp() const
 {
 	return hp;
