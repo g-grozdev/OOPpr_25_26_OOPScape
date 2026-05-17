@@ -12,5 +12,6 @@ public:
 
 	void tile_effect(const Tile& tile, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero);
 	virtual void ability(const std::vector<std::vector<Tile>>& tiles, Target& tar) = 0;
+	bool move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero, int direction = -1) override;
 };
 
