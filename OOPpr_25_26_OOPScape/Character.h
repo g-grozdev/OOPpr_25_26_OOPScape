@@ -1,8 +1,7 @@
 #pragma once
-#include "Damageable.h"
-#include "Position.h"
 #include "Weapon.h"
 #include "IMoveable.h"
+#include "Target.h"
 
 class Character : public Target, public IMoveable
 {

@@ -1,9 +1,10 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include "Tile.h"
-#include "Target.h"
-#include "Hero.h"
+
+class Tile;
+class Target;
+class Hero;
 
 class IMoveable 
 {

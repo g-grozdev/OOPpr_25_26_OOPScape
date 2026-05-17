@@ -2,6 +2,7 @@
 #include <queue>
 #include "Character.h"
 #include "Hero.h"
+#include "Tile.h"
 
 class Enemy : public Character
 {
@@ -26,5 +27,5 @@ public:
 	~Enemy() override = default;
 	bool target_is_in_range(const std::vector<std::vector<Tile>>& tiles, const Position& pos, const std::shared_ptr<Target>& tar,
 		const std::shared_ptr<Hero>& hero, int direction);
-	bool move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero, int direction = -1) override;
+	bool move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero, int direction) override;
 };
