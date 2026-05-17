@@ -6,12 +6,14 @@ class Hero : public Character
 	int ability_cooldown;
 	int last_used_ability;
 
+protected:
+	void tile_effect(const Tile& tile, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero);
+
 public:
 	Hero(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool _pierce, int ac);
 	~Hero() override = default;
 
-	void tile_effect(const Tile& tile, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero);
-	virtual void ability(const std::vector<std::vector<Tile>>& tiles, Target& tar) = 0;
+	virtual bool ability(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, int x = -1, int y = -1) = 0;
 	bool move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero, int direction = -1) override;
 };
 
