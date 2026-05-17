@@ -18,7 +18,6 @@ void Knight::take_damage(int dmg)
 
 bool Knight::ability(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, int current_move, int x, int y)
 {
-	std::cout << x << " " << y;
 	if (last_used_ability != -1 && current_move - last_used_ability <= ability_cooldown) return false;
 
 	shield_hp = MAX_SHIELD_HP;
