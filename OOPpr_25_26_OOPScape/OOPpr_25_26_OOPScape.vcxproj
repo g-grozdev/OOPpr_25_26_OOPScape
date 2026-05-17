@@ -131,6 +131,7 @@
     <ClCompile Include="Damageable.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Hero.cpp" />
+    <ClCompile Include="Knight.cpp" />
     <ClCompile Include="OOPpr_25_26_OOPScape.cpp" />
     <ClCompile Include="Position.cpp" />
     <ClCompile Include="Target.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="IMoveable.h" />
+    <ClInclude Include="Knight.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="Target.h" />
     <ClInclude Include="Tile.h" />
