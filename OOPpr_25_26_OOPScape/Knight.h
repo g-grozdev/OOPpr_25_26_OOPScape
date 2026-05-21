@@ -7,7 +7,7 @@ class Knight : public Hero
 	const int MAX_SHIELD_HP;
 
 public:
-	Knight(int x, int y);
+	Knight(int x, int y, const int& m_c);
 	~Knight() override = default;
 
 	void take_damage(int dmg) override;

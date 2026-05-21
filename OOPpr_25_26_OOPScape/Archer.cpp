@@ -1,6 +1,6 @@
 #include "Archer.h"
 
-Archer::Archer(int x, int y) : Hero(75, 75, x, y, 25, 5, 0, false, 7) { }
+Archer::Archer(int x, int y, const int& m_c) : Hero(75, 75, x, y, 25, 5, 0, false, 7, m_c) { }
 
 bool Archer::ability(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, int x, int y)
 {

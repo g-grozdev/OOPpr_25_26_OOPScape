@@ -33,7 +33,7 @@ void Enemy::fill_visited_initial(int n, const std::vector<std::vector<Tile>>& ti
 	{
 		for (int j = 0; j < n; j++)
 		{
-			if (tiles[i][j].get_walkability() && target_is_in_range(tiles, Position(i, j), tar, hero))
+			if (tiles[i][j].get_walkability() && target_is_in_range(tiles, Position(i, j), tar, hero) != -1)
 			{
 				(*visited.get()).push(convert_coordinates(i, j, n));
 				(*prev.get())[i][j] = 4;
@@ -78,14 +78,47 @@ int Enemy::pathfind(const std::vector<std::vector<Tile>>& tiles, const std::shar
 }
 
 bool Enemy::target_is_in_range(const std::vector<std::vector<Tile>>& tiles, const Position& pos, const std::shared_ptr<Target>& tar,
-	const std::shared_ptr<Hero>& hero)
+	const std::shared_ptr<Hero>& hero, int direction)
 {
-	bool res = false;
-	for (int i = 0; i < 4; i++)
+	int tar_x = (*tar.get()).get_x();
+	int tar_y = (*tar.get()).get_y();
+	int hero_x = (*hero.get()).get_x();
+	int hero_y = (*hero.get()).get_y();
+
+	int attack_x = pos.get_x();
+	int attack_y = pos.get_y();
+
+	int n = tiles.size();
+	int dir[4][2] = { {-1, 0}, {0, 1}, {1, 0}, {0, -1} };
+	bool hit = false;
+	for (int i = 0; i <= wp.get_range() && attack_is_in_bounds(attack_x, attack_y, n); i++)
 	{
-		if (target_is_in_range(tiles, pos, tar, hero, i)) res = true;
+		if (!tiles[attack_x][attack_y].get_walkability())
+		{
+			attack_x -= dir[direction][0];
+			attack_y -= dir[direction][1];
+			return check_AOE(tiles, Position(attack_x, attack_y), tar);
+		}
+		if ((attack_x == tar_x && attack_y == tar_y) || (attack_x == hero_x && attack_y == hero_y))
+		{
+			if (!wp.get_pierce())
+			{
+				return check_AOE(tiles, Position(attack_x, attack_y), tar);
+			}
+			else
+			{
+				if (check_AOE(tiles, Position(attack_x, attack_y), tar))
+				{
+					return true;
+				}
+			}
+		}
+
+		attack_x += dir[direction][0];
+		attack_y += dir[direction][1];
 	}
-	return res;
+
+	return false;
 }
 
 bool Enemy::attack_is_in_bounds(int x, int y, int n)
@@ -144,53 +177,19 @@ bool Enemy::is_within_AOE(int x1, int y1, int x2, int y2, int AOE)
 	return dx * dx + dy * dy <= AOE;
 }
 
+int Enemy::target_is_in_range(const std::vector<std::vector<Tile>>& tiles, const Position& pos, const std::shared_ptr<Target>& tar,
+	const std::shared_ptr<Hero>& hero)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		if (target_is_in_range(tiles, pos, tar, hero, i)) return i;
+	}
+	return -1;
+}
+
 Enemy::Enemy(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool _pierce, const int& m_c,
 	const std::shared_ptr<std::vector<std::vector<int>>>& _prev, const std::shared_ptr<std::queue<int>>& _visited) : 
 	Character(_hp, _mhp, _x, _y, dmg, rng, aoe, _pierce, m_c), prev(_prev), visited(_visited) { }
-
-bool Enemy::target_is_in_range(const std::vector<std::vector<Tile>>& tiles, const Position& pos, const std::shared_ptr<Target>& tar,
-	const std::shared_ptr<Hero>& hero, int direction)
-{
-	int tar_x = (*tar.get()).get_x();
-	int tar_y = (*tar.get()).get_y();
-	int hero_x = (*hero.get()).get_x();
-	int hero_y = (*hero.get()).get_y();
-
-	int attack_x = pos.get_x();
-	int attack_y = pos.get_y();
-
-	int n = tiles.size();
-	int dir[4][2] = { {-1, 0}, {0, 1}, {1, 0}, {0, -1} };
-	bool hit = false;
-	for (int i = 0; i <= wp.get_range() && attack_is_in_bounds(attack_x, attack_y, n); i++)
-	{
-		if (!tiles[attack_x][attack_y].get_walkability())
-		{
-			attack_x -= dir[direction][0];
-			attack_y -= dir[direction][1];
-			return check_AOE(tiles, Position(attack_x, attack_y), tar);
-		}
-		if ((attack_x == tar_x && attack_y == tar_y) || (attack_x == hero_x && attack_y == hero_y))
-		{
-			if (!wp.get_pierce())
-			{
-				return check_AOE(tiles, Position(attack_x, attack_y), tar);
-			}
-			else
-			{
-				if (check_AOE(tiles, Position(attack_x, attack_y), tar))
-				{
-					return true;
-				}
-			}
-		}
-
-		attack_x += dir[direction][0];
-		attack_y += dir[direction][1];
-	}
-
-	return false;
-}
 
 bool Enemy::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero, int direction = -1)
 {
