@@ -6,10 +6,11 @@
 class Character : public Target, public IMoveable
 {
 protected:
+	const int& move_counter;
 	Weapon wp;
 
 public:
-	Character(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool _pierce);
+	Character(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool _pierce, const int& m_c);
 	~Character() override = default;
 
 	Weapon attack(int direction);

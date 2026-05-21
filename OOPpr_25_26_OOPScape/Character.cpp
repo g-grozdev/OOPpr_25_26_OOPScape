@@ -1,7 +1,7 @@
 #include "Character.h"
 
-Character::Character(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool _pierce) : Target(_x, _y, _hp, _mhp),
-wp(dmg, rng, aoe, _pierce) { }
+Character::Character(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool _pierce, const int& m_c) : Target(_x, _y, _hp, _mhp),
+wp(dmg, rng, aoe, _pierce), move_counter(m_c) { }
 
 Weapon Character::attack(int direction)
 {
