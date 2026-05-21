@@ -12,15 +12,11 @@ bool Giant::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Ta
 	return true;
 }
 
-Weapon Giant::attack(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, int direction)
+Weapon Giant::attack(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, int direction = -1)
 {
 	if (move_counter % 3 != 2)
 	{
-		int dir = target_is_in_range(tiles, Position(x, y), tar, hero);
-		if (dir != -1) 
-		{
-			return Character::attack(tiles, tar, hero, dir);
-		}
+		Enemy::attack(tiles, tar, hero, direction);
 	}
 	return Weapon(0, -1, 0, false);
 }
