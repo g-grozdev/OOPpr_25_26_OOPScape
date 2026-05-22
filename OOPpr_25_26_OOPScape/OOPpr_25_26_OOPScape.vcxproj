@@ -136,6 +136,7 @@
     <ClCompile Include="Hero.cpp" />
     <ClCompile Include="HeroFactory.cpp" />
     <ClCompile Include="Knight.cpp" />
+    <ClCompile Include="Labyrinth.cpp" />
     <ClCompile Include="OOPpr_25_26_OOPScape.cpp" />
     <ClCompile Include="Position.cpp" />
     <ClCompile Include="Skeleton.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="HeroFactory.h" />
     <ClInclude Include="IMoveable.h" />
     <ClInclude Include="Knight.h" />
+    <ClInclude Include="Labyrinth.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="Target.h" />
