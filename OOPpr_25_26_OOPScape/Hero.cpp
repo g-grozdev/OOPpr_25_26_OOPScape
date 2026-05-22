@@ -22,7 +22,7 @@ void Hero::tile_effect(const Tile& tile, std::shared_ptr<Target>& tar, const std
 Hero::Hero(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool _pierce, int ac, const int& m_c) :
 	Character(_hp, _mhp, _x, _y, dmg, rng, aoe, _pierce, m_c), ability_cooldown(ac), last_used_ability(-1) { }
 
-bool Hero::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero, int direction = -1)
+bool Hero::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero, int direction)
 {
 	int n = tiles.size();
 	int temp_x = x;

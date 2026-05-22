@@ -9,4 +9,6 @@ bool Thief::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Ta
 	{
 		Enemy::move(tiles, tar, hero, direction);
 	}
+
+	return true;
 }

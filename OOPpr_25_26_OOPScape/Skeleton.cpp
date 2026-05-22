@@ -38,7 +38,7 @@ Weapon Skeleton::attack(const std::vector<std::vector<Tile>>& tiles, std::shared
 		apply_bonus();
 	}
 
-	Enemy::attack(tiles, tar, hero, direction);
+	return Enemy::attack(tiles, tar, hero, direction);
 }
 
 const std::shared_ptr<int>& Skeleton::get_bonus_count() const

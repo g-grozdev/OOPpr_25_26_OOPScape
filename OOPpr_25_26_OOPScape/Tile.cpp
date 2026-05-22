@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile(int x, int y, Effect _eff, bool _walk) : pos(x, y), eff(_eff), walkable(_walk) { }
+Tile::Tile(int x, int y, Effect _eff, bool _walk, bool _is_end) : pos(x, y), eff(_eff), walkable(_walk), is_end(_is_end) { }
 
 const Position& Tile::get_pos() const
 {
@@ -30,4 +30,14 @@ bool Tile::get_walkability() const
 void Tile::set_walkability(bool _walk)
 {
 	walkable = _walk;
+}
+
+bool Tile::get_is_end() const
+{
+	return is_end;
+}
+
+void Tile::set_is_end(bool _is_end)
+{
+	is_end = _is_end;
 }
