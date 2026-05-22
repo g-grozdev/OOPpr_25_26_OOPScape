@@ -14,5 +14,8 @@ public:
 
 	void take_damage(int dmg) override;
 	Weapon attack(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, int direction) override;
+
+	const std::shared_ptr<int>& get_bonus_count() const;
+	void set_bonus_count(const std::shared_ptr<int>& _bonus_count);
 };
 

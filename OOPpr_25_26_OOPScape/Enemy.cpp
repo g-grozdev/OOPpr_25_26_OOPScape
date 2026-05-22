@@ -223,3 +223,23 @@ Weapon Enemy::attack(const std::vector<std::vector<Tile>>& tiles, std::shared_pt
 		return Character::attack(tiles, tar, hero, dir);
 	}
 }
+
+const std::shared_ptr<std::vector<std::vector<int>>>& Enemy::get_prev() const
+{
+	return prev;
+}
+
+void Enemy::set_prev(const std::shared_ptr<std::vector<std::vector<int>>>& _prev)
+{
+	prev = _prev;
+}
+
+const std::shared_ptr<std::queue<int>>& Enemy::get_visited() const
+{
+	return visited;
+}
+
+void Enemy::set_visited(const std::shared_ptr<std::queue<int>>& _visited)
+{
+	visited = _visited;
+}

@@ -16,6 +16,8 @@ Skeleton::Skeleton(int x, int y, const int& m_c) : Enemy(50, 120, x, y, 10, 1, 0
 
 void Skeleton::take_damage(int dmg)
 {
+	if (hp == 0) return;
+
 	if (last_bonus_applied != (*bonus_count.get())) 
 	{
 		apply_bonus();
@@ -37,4 +39,14 @@ Weapon Skeleton::attack(const std::vector<std::vector<Tile>>& tiles, std::shared
 	}
 
 	Enemy::attack(tiles, tar, hero, direction);
+}
+
+const std::shared_ptr<int>& Skeleton::get_bonus_count() const
+{
+	return bonus_count;
+}
+
+void Skeleton::set_bonus_count(const std::shared_ptr<int>& _bonus_count)
+{
+	bonus_count = _bonus_count;
 }
