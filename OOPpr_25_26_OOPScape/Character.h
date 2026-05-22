@@ -10,7 +10,7 @@ protected:
 	Weapon wp;
 
 public:
-	Character(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool _pierce, const int& m_c);
+	Character(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool _pierce, const int& m_c, char d_c);
 	~Character() override = default;
 
 	virtual Weapon attack(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, int direction);

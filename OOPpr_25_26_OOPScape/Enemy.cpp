@@ -187,9 +187,9 @@ bool Enemy::is_within_AOE(int x1, int y1, int x2, int y2, int AOE)
 	return dx * dx + dy * dy <= AOE;
 }
 
-Enemy::Enemy(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool _pierce, const int& m_c,
+Enemy::Enemy(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool _pierce, const int& m_c, char d_c,
 	const std::shared_ptr<std::vector<std::vector<int>>>& _prev, const std::shared_ptr<std::queue<int>>& _visited) : 
-	Character(_hp, _mhp, _x, _y, dmg, rng, aoe, _pierce, m_c), prev(_prev), visited(_visited) { }
+	Character(_hp, _mhp, _x, _y, dmg, rng, aoe, _pierce, m_c, d_c), prev(_prev), visited(_visited) { }
 
 bool Enemy::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero, int direction)
 {

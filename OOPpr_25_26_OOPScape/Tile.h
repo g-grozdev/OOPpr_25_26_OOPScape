@@ -8,9 +8,10 @@ class Tile
 	Effect eff;
 	bool walkable;
 	bool is_end;
+	char display_char;
 
 public:
-	Tile(int x, int y, Effect _eff, bool _walk, bool _is_end);
+	Tile(int x, int y, Effect _eff, bool _walk, bool _is_end, char d_c);
 
 	const Position& get_pos() const;
 	void set_pos(const Position& _pos);
@@ -20,5 +21,7 @@ public:
 	void set_walkability(bool _walk);
 	bool get_is_end() const;
 	void set_is_end(bool _is_end);
+	char get_display_char() const;
+	void set_display_char(char d_c);
 };
 

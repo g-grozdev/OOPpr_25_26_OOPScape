@@ -31,6 +31,8 @@ bool Labyrinth::create_from_character(char character, int x, int y, int row)
 
 int Labyrinth::play_game_state()
 {
+	print();
+
 	int successful_movement = 1;
 	do
 	{
@@ -56,6 +58,8 @@ int Labyrinth::play_game_state()
 		(*enemies[i].get()).move(tiles, target, hero);
 	}
 
+	print();
+
 	// apply player attack
 	get_player_action();
 
@@ -73,6 +77,8 @@ int Labyrinth::play_game_state()
 	{
 		return -1;
 	}
+
+	return 0;
 }
 
 int Labyrinth::get_player_movement()
@@ -149,6 +155,47 @@ int Labyrinth::check_state()
 		return 1;
 	}
 	return 0;
+}
+
+void Labyrinth::print()
+{
+	//std::system("CLS");
+	std::vector<std::vector<char>> display;
+	for (int i = 0; tiles.size(); i++) 
+	{
+		display.push_back(std::vector<char>());
+		for (int j = 0; j < tiles.size(); j++)
+		{
+			display[i].push_back(tiles[i][j].get_display_char());
+		}
+	}
+
+	for (int i = 0; i < enemies.size(); i++) 
+	{
+		int x = (*enemies[i].get()).get_x();
+		int y = (*enemies[i].get()).get_y();
+		char d_c = (*enemies[i].get()).get_display_char();
+		display[x][y] = d_c;
+	}
+
+	int x = (*target.get()).get_x();
+	int y = (*target.get()).get_y();
+	char d_c = (*target.get()).get_display_char();
+	display[x][y] = d_c;
+
+	x = (*hero.get()).get_x();
+	y = (*hero.get()).get_y();
+	d_c = (*hero.get()).get_display_char();
+	display[x][y] = d_c;
+
+	for (int i = 0; tiles.size(); i++)
+	{
+		for (int j = 0; j < tiles.size(); j++)
+		{
+			std::cout << display[i][j] << ' ';
+		}
+		std::cout << '\n';
+	}
 }
 
 Labyrinth::Labyrinth(const char* file_name) : move_counter(0)

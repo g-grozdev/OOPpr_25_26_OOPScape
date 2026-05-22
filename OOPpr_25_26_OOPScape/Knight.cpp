@@ -1,6 +1,6 @@
 #include "Knight.h"
 
-Knight::Knight(int x, int y, const int& m_c) : Hero(150, 150, x, y, 35, 2, 0, true, 5, m_c), shield_hp(0), MAX_SHIELD_HP(50) { }
+Knight::Knight(int x, int y, const int& m_c) : Hero(150, 150, x, y, 35, 2, 0, true, 5, m_c, 'K'), shield_hp(0), MAX_SHIELD_HP(50) {}
 
 void Knight::take_damage(int dmg)
 {

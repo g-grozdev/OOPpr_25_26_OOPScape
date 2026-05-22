@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+//#include <stdlib.h>
 #include "HeroFactory.h"
 #include "EnemyFactory.h"
 #include "TileFactory.h"
@@ -21,6 +22,7 @@ class Labyrinth
 	void get_player_action();
 	void get_player_attack();
 	int check_state();
+	void print();
 
 public:
 	Labyrinth(const char* file_name);

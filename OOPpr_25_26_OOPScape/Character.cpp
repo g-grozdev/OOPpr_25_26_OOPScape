@@ -1,7 +1,7 @@
 #include "Character.h"
 
-Character::Character(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool _pierce, const int& m_c) : Target(_x, _y, _hp, _mhp),
-wp(dmg, rng, aoe, _pierce), move_counter(m_c) { }
+Character::Character(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool _pierce, const int& m_c, char d_c) : 
+	Target(_x, _y, _hp, _mhp, d_c), wp(dmg, rng, aoe, _pierce), move_counter(m_c) { }
 
 Weapon Character::attack(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, int direction)
 {

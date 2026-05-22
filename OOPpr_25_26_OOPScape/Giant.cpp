@@ -1,6 +1,6 @@
 #include "Giant.h"
 
-Giant::Giant(int x, int y, const int& m_c) : Enemy(250, 250, x, y, 50, 2, 0, true, m_c, nullptr, nullptr) { }
+Giant::Giant(int x, int y, const int& m_c) : Enemy(250, 250, x, y, 50, 2, 0, true, m_c, 'g', nullptr, nullptr) {}
 
 bool Giant::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero, int direction)
 {

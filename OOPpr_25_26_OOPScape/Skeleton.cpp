@@ -11,7 +11,7 @@ void Skeleton::apply_bonus()
 	last_bonus_applied = (*bonus_count.get());
 }
 
-Skeleton::Skeleton(int x, int y, const int& m_c) : Enemy(50, 120, x, y, 10, 1, 0, false, m_c, nullptr, nullptr), bonus_count(nullptr),
+Skeleton::Skeleton(int x, int y, const int& m_c) : Enemy(50, 120, x, y, 10, 1, 0, false, m_c, 's', nullptr, nullptr), bonus_count(nullptr),
 	last_bonus_applied(0) { }
 
 void Skeleton::take_damage(int dmg)

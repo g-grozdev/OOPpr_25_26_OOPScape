@@ -1,6 +1,7 @@
 #include "Tile.h"
 
-Tile::Tile(int x, int y, Effect _eff, bool _walk, bool _is_end) : pos(x, y), eff(_eff), walkable(_walk), is_end(_is_end) { }
+Tile::Tile(int x, int y, Effect _eff, bool _walk, bool _is_end, char d_c) : pos(x, y), eff(_eff), walkable(_walk), is_end(_is_end),
+	display_char(d_c){ }
 
 const Position& Tile::get_pos() const
 {
@@ -40,4 +41,14 @@ bool Tile::get_is_end() const
 void Tile::set_is_end(bool _is_end)
 {
 	is_end = _is_end;
+}
+
+char Tile::get_display_char() const
+{
+	return display_char;
+}
+
+void Tile::set_display_char(char d_c)
+{
+	display_char = d_c;
 }
