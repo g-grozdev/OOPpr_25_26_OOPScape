@@ -64,15 +64,14 @@ int Labyrinth::play_game_state()
 {
 	print();
 
-	int successful_movement = 1;
+	bool successful_movement = true;
 	do
 	{
-		if (successful_movement != 1) 
+		if (!successful_movement) 
 		{
 			std::cout << "invalid movement please try again\n";
 		}
-		int direction = get_player_movement();
-		successful_movement = (*hero.get()).move(tiles, target, hero, direction);
+		successful_movement = (*hero.get()).move(tiles, target, hero);
 	} while (!successful_movement);
 
 	print();
@@ -116,32 +115,6 @@ int Labyrinth::play_game_state()
 	return 0;
 }
 
-int Labyrinth::get_player_movement()
-{
-	std::cout << "Enter a command to move in a direction : U (up) ; R (right) ; D (down) ; L (left) ; S (stay in the same place)\n";
-	std::string command = "";
-	std::getline(std::cin, command);
-	while (command != "U" && command != "R" && command != "D" && command != "L" && command != "S")
-	{
-		// check for whether actual input was made (sometimes the wizards ability messes with the buffer and causes a false alarm)
-		if (command != "") 
-		{
-			std::cout << "Invalid command please try again\n";
-		}
-		std::getline(std::cin, command);
-	}
-
-	int direction = 0;
-
-	if (command == "U") direction = 0;
-	else if (command == "R") direction = 1;
-	else if (command == "D") direction = 2;
-	else if (command == "L") direction = 3;
-	else if (command == "S") direction = 4;
-
-	return direction;
-}
-
 void Labyrinth::get_player_action()
 {
 	std::cout << "Enter a command for an action : X (attack) ; A (ability)\n";
@@ -155,33 +128,12 @@ void Labyrinth::get_player_action()
 
 	if (command == "X") 
 	{
-		get_player_attack();
+		(*hero.get()).attack(tiles, target, hero);
 	}
 	else if (command == "A") 
 	{
 		(*hero.get()).ability(tiles, target, hero);
 	}
-}
-
-void Labyrinth::get_player_attack()
-{
-	std::cout << "Enter a command to attack in a direction : U (up) ; R (right) ; D (down) ; L (left)\n";
-	std::string command = "";
-	std::getline(std::cin, command);
-	while (command != "U" && command != "R" && command != "D" && command != "L")
-	{
-		std::cout << "Invalid command please try again\n";
-		std::getline(std::cin, command);
-	}
-
-	int direction = 0;
-
-	if (command == "U") direction = 0;
-	else if (command == "R") direction = 1;
-	else if (command == "D") direction = 2;
-	else if (command == "L") direction = 3;
-
-	(*hero.get()).attack(tiles, target, hero, direction);
 }
 
 int Labyrinth::check_state()
@@ -210,10 +162,17 @@ void Labyrinth::print()
 		}
 	}
 
-	int x = (*target.get()).get_x();
-	int y = (*target.get()).get_y();
-	char d_c = (*target.get()).get_display_char();
-	display[x][y] = d_c;
+	int x = -1;
+	int y = -1;
+	char d_c = '\0';
+
+	if (target != nullptr) 
+	{
+		x = (*target.get()).get_x();
+		y = (*target.get()).get_y();
+		d_c = (*target.get()).get_display_char();
+		display[x][y] = d_c;
+	}
 
 	for (int i = 0; i < enemies.size(); i++) 
 	{
@@ -259,6 +218,7 @@ void Labyrinth::print()
 		}
 		std::cout << '\n';
 	}
+	(*hero.get()).print();
 }
 
 Labyrinth::Labyrinth(const char* file_name) : move_counter(0)

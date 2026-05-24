@@ -25,3 +25,9 @@ bool Knight::ability(const std::vector<std::vector<Tile>>& tiles, std::shared_pt
 	
 	return true;
 }
+
+void Knight::print()
+{
+	Hero::print();
+	std::cout << "sheild HP: " << shield_hp << '\n';
+}

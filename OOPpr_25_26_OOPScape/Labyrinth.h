@@ -21,9 +21,7 @@ class Labyrinth
 	void create_prev_and_visited(int size);
 
 	int play_game_state();
-	int get_player_movement();
 	void get_player_action();
-	void get_player_attack();
 	int check_state();
 	void print();
 

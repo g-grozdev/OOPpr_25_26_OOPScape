@@ -10,5 +10,5 @@ class IMoveable
 {
 public:
 	virtual ~IMoveable() = default;
-	virtual bool move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero, int direction) = 0;
+	virtual bool move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero) = 0;
 };

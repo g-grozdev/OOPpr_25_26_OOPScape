@@ -45,14 +45,14 @@ void Skeleton::take_damage(int dmg)
 	Damageable::take_damage(dmg);
 }
 
-Weapon Skeleton::attack(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, int direction = -1)
+Weapon Skeleton::attack(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero)
 {
 	if (last_bonus_applied != (*bonus_count.get()))
 	{
 		apply_bonus();
 	}
 
-	return Enemy::attack(tiles, tar, hero, direction);
+	return Enemy::attack(tiles, tar, hero);
 }
 
 const std::shared_ptr<int>& Skeleton::get_bonus_count() const

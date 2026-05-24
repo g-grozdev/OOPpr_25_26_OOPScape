@@ -204,9 +204,17 @@ Enemy::Enemy(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool 
 	const std::shared_ptr<std::vector<std::vector<int>>>& _prev, const std::shared_ptr<std::queue<int>>& _visited) : 
 	Character(_hp, _mhp, _x, _y, dmg, rng, aoe, _pierce, m_c, d_c), prev(_prev), visited(_visited) { }
 
-bool Enemy::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero, int direction)
+bool Enemy::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero)
 {
-	direction = pathfind(tiles, tar, hero);
+	int direction = -1;
+	if (tar != nullptr) 
+	{
+		direction = pathfind(tiles, tar, hero);
+	}
+	else 
+	{
+		direction = 4;
+	}
 	switch (direction)
 	{
 	case 0:
@@ -231,12 +239,15 @@ bool Enemy::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Ta
 	return true;
 }
 
-Weapon Enemy::attack(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, int direction)
+Weapon Enemy::attack(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero)
 {
-	int dir = target_is_in_range(tiles, Position(x, y), tar, hero);
-	if (dir != -1)
+	if (tar != nullptr) 
 	{
-		return Character::attack(tiles, tar, hero, dir);
+		int dir = target_is_in_range(tiles, Position(x, y), tar, hero);
+		if (dir != -1)
+		{
+			return Character::attack(tiles, tar, hero, dir);
+		}
 	}
 	return Weapon(0, -1, 0, false);
 }

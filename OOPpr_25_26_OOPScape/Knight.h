@@ -12,5 +12,6 @@ public:
 
 	void take_damage(int dmg) override;
 	bool ability(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero) override;
+	void print() override;
 };
 
