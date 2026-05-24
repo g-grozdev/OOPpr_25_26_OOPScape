@@ -3,7 +3,12 @@
 bool Labyrinth::create_from_character(char character, int x, int y, int row)
 {
 	bool has_end = false;
-	if (character >= 'A' && character <= 'Z')
+	if (character == 'F')
+	{
+		has_end = true;
+		tiles[row].push_back(TileFactory::create_tile(character, x, y));
+	}
+	else if (character >= 'A' && character <= 'Z')
 	{
 		if (hero != nullptr)
 		{
@@ -20,13 +25,39 @@ bool Labyrinth::create_from_character(char character, int x, int y, int row)
 	}
 	else
 	{
-		if (character == 'F')
-		{
-			has_end = true;
-		}
 		tiles[row].push_back(TileFactory::create_tile(character, x, y));
 	}
 	return has_end;
+}
+
+void Labyrinth::create_prev_and_visited(int size)
+{
+	std::shared_ptr<std::vector<std::vector<int>>> prev_AOE;
+	prev_AOE = std::make_shared<std::vector<std::vector<int>>>();
+	std::shared_ptr<std::queue<int>> visited_AOE;
+	visited_AOE = std::make_shared<std::queue<int>>();
+
+	prev = std::make_shared<std::vector<std::vector<int>>>();
+	visited = std::make_shared<std::queue<int>>();
+
+	for (int i = 0; i < size; i++) 
+	{
+		(*prev.get()).push_back(std::vector<int>());
+		(*prev_AOE.get()).push_back(std::vector<int>());
+		for (int j = 0; j < size; j++) 
+		{
+			(*prev.get())[i].push_back(-1);
+			(*prev_AOE.get())[i].push_back(-1);
+		}
+	}
+
+	for (int i = 0; i < enemies.size(); i++) 
+	{
+		(*enemies[i].get()).set_prev(prev);
+		(*enemies[i].get()).set_prev_AOE(prev_AOE);
+		(*enemies[i].get()).set_visited(visited);
+		(*enemies[i].get()).set_visited_AOE(visited_AOE);
+	}
 }
 
 int Labyrinth::play_game_state()
@@ -63,6 +94,8 @@ int Labyrinth::play_game_state()
 	// apply player attack
 	get_player_action();
 
+	print();
+
 	for (int i = 0; i < enemies.size(); i++) 
 	{
 		// apply enemy attack
@@ -83,10 +116,10 @@ int Labyrinth::play_game_state()
 
 int Labyrinth::get_player_movement()
 {
-	std::cout << "Enter a command to move in a direction : U (up) ; R (right) ; D (down) ; L (left)\n";
+	std::cout << "Enter a command to move in a direction : U (up) ; R (right) ; D (down) ; L (left) ; S (stay in the same place)\n";
 	std::string command = "";
 	std::getline(std::cin, command);
-	while (command != "U" && command != "R" && command != "D" && command != "L") 
+	while (command != "U" && command != "R" && command != "D" && command != "L" && command != "S")
 	{
 		std::cout << "Invalid command please try again\n";
 		std::getline(std::cin, command);
@@ -98,6 +131,7 @@ int Labyrinth::get_player_movement()
 	else if (command == "R") direction = 1;
 	else if (command == "D") direction = 2;
 	else if (command == "L") direction = 3;
+	else if (command == "S") direction = 4;
 
 	return direction;
 }
@@ -159,9 +193,9 @@ int Labyrinth::check_state()
 
 void Labyrinth::print()
 {
-	//std::system("CLS");
+	std::system("CLS");
 	std::vector<std::vector<char>> display;
-	for (int i = 0; tiles.size(); i++) 
+	for (int i = 0; i < tiles.size(); i++) 
 	{
 		display.push_back(std::vector<char>());
 		for (int j = 0; j < tiles.size(); j++)
@@ -169,6 +203,11 @@ void Labyrinth::print()
 			display[i].push_back(tiles[i][j].get_display_char());
 		}
 	}
+
+	int x = (*target.get()).get_x();
+	int y = (*target.get()).get_y();
+	char d_c = (*target.get()).get_display_char();
+	display[x][y] = d_c;
 
 	for (int i = 0; i < enemies.size(); i++) 
 	{
@@ -178,17 +217,12 @@ void Labyrinth::print()
 		display[x][y] = d_c;
 	}
 
-	int x = (*target.get()).get_x();
-	int y = (*target.get()).get_y();
-	char d_c = (*target.get()).get_display_char();
-	display[x][y] = d_c;
-
 	x = (*hero.get()).get_x();
 	y = (*hero.get()).get_y();
 	d_c = (*hero.get()).get_display_char();
 	display[x][y] = d_c;
 
-	for (int i = 0; tiles.size(); i++)
+	for (int i = 0; i < tiles.size(); i++)
 	{
 		for (int j = 0; j < tiles.size(); j++)
 		{
@@ -200,7 +234,7 @@ void Labyrinth::print()
 
 Labyrinth::Labyrinth(const char* file_name) : move_counter(0)
 {
-	std::ifstream file(file_name);
+	std::fstream file(file_name, std::ios::in);
 
 	if (!file.is_open()) 
 	{
@@ -215,6 +249,7 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0)
 	else 
 	{
 		file >> size;
+		file.get();
 	}
 	Position::set_max(size);
 
@@ -222,7 +257,6 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0)
 	{
 		// throw exception of invalid file;
 	}
-
 
 	bool has_end = false;
 	for (int i = 0; i < size; i++) 
@@ -237,16 +271,19 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0)
 			}
 			else
 			{
-				file >> current;
+				file.get(current);
 			}
 			has_end |= create_from_character(current, i, j, i);
 		}
+		file.get();
 	}
 
 	if (!has_end || hero == nullptr) 
 	{
 		// throw exception of invalid file;
 	}
+
+	create_prev_and_visited(size);
 
 	file.close();
 }
@@ -257,6 +294,7 @@ int Labyrinth::play()
 	do
 	{
 		res = play_game_state();
+		move_counter++;
 	} while (res == 0);
 	return res;
 }

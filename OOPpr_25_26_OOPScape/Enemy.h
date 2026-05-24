@@ -8,10 +8,13 @@ class Enemy : public Character
 {
 	std::shared_ptr<std::vector<std::vector<int>>> prev;
 	std::shared_ptr<std::queue<int>> visited;
+	std::shared_ptr<std::vector<std::vector<int>>> prev_AOE;
+	std::shared_ptr<std::queue<int>> visited_AOE;
 	int convert_coordinates(int x, int y, int n);
 	int convert_x_coordinate(int c, int n);
 	int convert_y_coordinate(int c, int n);
 	void reset_prev(int n);
+	void reset_prev_AOE(int n);
 	void fill_visited_initial(int n, const std::vector<std::vector<Tile>>& tiles, const std::shared_ptr<Target>& tar, 
 		const std::shared_ptr<Hero>& hero);
 	int pathfind(const std::vector<std::vector<Tile>>& tiles, const std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero);
@@ -19,7 +22,7 @@ class Enemy : public Character
 		const std::shared_ptr<Hero>& hero, int direction);
 	int target_is_in_range(const std::vector<std::vector<Tile>>& tiles, const Position& pos, const std::shared_ptr<Target>& tar,
 		const std::shared_ptr<Hero>& hero);
-	bool attack_is_in_bounds(int x, int y, int n);
+	bool is_in_bounds(int x, int y, int n);
 	bool check_AOE(const std::vector<std::vector<Tile>>& tiles, const Position& pos, const std::shared_ptr<Target>& tar);
 	bool is_within_AOE(int x1, int y1, int x2, int y2, int AOE);
 
@@ -34,4 +37,9 @@ public:
 	void set_prev(const std::shared_ptr<std::vector<std::vector<int>>>& _prev);
 	const std::shared_ptr<std::queue<int>>& get_visited() const;
 	void set_visited(const std::shared_ptr<std::queue<int>>& _visited);
+
+	const std::shared_ptr<std::vector<std::vector<int>>>& get_prev_AOE() const;
+	void set_prev_AOE(const std::shared_ptr<std::vector<std::vector<int>>>& _prev_AOE);
+	const std::shared_ptr<std::queue<int>>& get_visited_AOE() const;
+	void set_visited_AOE(const std::shared_ptr<std::queue<int>>& _visited_AOE);
 };

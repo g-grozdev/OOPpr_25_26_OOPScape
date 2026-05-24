@@ -26,6 +26,17 @@ void Enemy::reset_prev(int n)
 	}
 }
 
+void Enemy::reset_prev_AOE(int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			(*prev_AOE.get())[i][j] = -1;
+		}
+	}
+}
+
 void Enemy::fill_visited_initial(int n, const std::vector<std::vector<Tile>>& tiles, const std::shared_ptr<Target>& tar,
 	const std::shared_ptr<Hero>& hero)
 {
@@ -64,6 +75,7 @@ int Enemy::pathfind(const std::vector<std::vector<Tile>>& tiles, const std::shar
 			{
 				new_x = temp_x + dir[j][0];
 				new_y = temp_y + dir[j][1];
+				if (!is_in_bounds(new_x, new_y, n)) continue;
 				if (tiles[new_x][new_y].get_walkability() && (*prev.get())[new_x][new_y] == -1)
 				{
 					(*visited.get()).push(convert_coordinates(new_x, new_y, n));
@@ -91,7 +103,7 @@ bool Enemy::target_is_in_range(const std::vector<std::vector<Tile>>& tiles, cons
 	int n = tiles.size();
 	int dir[4][2] = { {-1, 0}, {0, 1}, {1, 0}, {0, -1} };
 	bool hit = false;
-	for (int i = 0; i <= wp.get_range() && attack_is_in_bounds(attack_x, attack_y, n); i++)
+	for (int i = 0; i <= wp.get_range() && is_in_bounds(attack_x, attack_y, n); i++)
 	{
 		if (!tiles[attack_x][attack_y].get_walkability())
 		{
@@ -131,7 +143,7 @@ int Enemy::target_is_in_range(const std::vector<std::vector<Tile>>& tiles, const
 	return -1;
 }
 
-bool Enemy::attack_is_in_bounds(int x, int y, int n)
+bool Enemy::is_in_bounds(int x, int y, int n)
 {
 	return x > -1 && x < n && y > -1 && y < n;
 }
@@ -140,24 +152,24 @@ bool Enemy::check_AOE(const std::vector<std::vector<Tile>>& tiles, const Positio
 {
 	int n = tiles.size();
 	int AOE = wp.get_AOE();
-	reset_prev(n);
+	reset_prev_AOE(n);
 
 	int init_x = pos.get_x();
 	int init_y = pos.get_y();
 
 	if (is_within_AOE(init_x, init_y, init_x, init_y, AOE))
 	{
-		(*visited.get()).push(convert_coordinates(init_x, init_y, n));
-		(*prev.get())[init_x][init_y] = 0;
+		(*visited_AOE.get()).push(convert_coordinates(init_x, init_y, n));
+		(*prev_AOE.get())[init_x][init_y] = 0;
 	}
 
 	int dir[4][2] = { {1, 0}, {0, -1}, {-1, 0}, {0, 1} };
 
-	while (!(*visited.get()).empty())
+	while (!(*visited_AOE.get()).empty())
 	{
-		for (int i = (*visited.get()).size(); i > 0; i--)
+		for (int i = (*visited_AOE.get()).size(); i > 0; i--)
 		{
-			int ind = (*visited.get()).front();
+			int ind = (*visited_AOE.get()).front();
 			int temp_x = convert_x_coordinate(ind, n);
 			int temp_y = convert_y_coordinate(ind, n);
 			int new_x = -1;
@@ -166,18 +178,19 @@ bool Enemy::check_AOE(const std::vector<std::vector<Tile>>& tiles, const Positio
 			{
 				new_x = temp_x + dir[j][0];
 				new_y = temp_y + dir[j][1];
-				if (tiles[new_x][new_y].get_walkability() && (*prev.get())[new_x][new_y] == -1
+				if (!is_in_bounds(new_x, new_y, n)) continue;
+				if (tiles[new_x][new_y].get_walkability() && (*prev_AOE.get())[new_x][new_y] == -1
 					&& is_within_AOE(new_x, new_y, init_x, init_y, AOE))
 				{
-					(*visited.get()).push(convert_coordinates(new_x, new_y, n));
-					(*prev.get())[new_x][new_y] = 0;
+					(*visited_AOE.get()).push(convert_coordinates(new_x, new_y, n));
+					(*prev_AOE.get())[new_x][new_y] = 0;
 				}
 			}
-			(*visited.get()).pop();
+			(*visited_AOE.get()).pop();
 		}
 	}
 
-	return (*prev.get())[(*tar.get()).get_x()][(*tar.get()).get_y()] == 0;
+	return (*prev_AOE.get())[(*tar.get()).get_x()][(*tar.get()).get_y()] == 0;
 }
 
 bool Enemy::is_within_AOE(int x1, int y1, int x2, int y2, int AOE)
@@ -207,6 +220,9 @@ bool Enemy::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Ta
 		break;
 	case 3:
 		set_y(get_y() - 1);
+		break;
+	case 4:
+		// stay in same place;
 		break;
 	default:
 		break;
@@ -243,4 +259,24 @@ const std::shared_ptr<std::queue<int>>& Enemy::get_visited() const
 void Enemy::set_visited(const std::shared_ptr<std::queue<int>>& _visited)
 {
 	visited = _visited;
+}
+
+const std::shared_ptr<std::vector<std::vector<int>>>& Enemy::get_prev_AOE() const
+{
+	return prev_AOE;
+}
+
+void Enemy::set_prev_AOE(const std::shared_ptr<std::vector<std::vector<int>>>& _prev_AOE)
+{
+	prev_AOE = _prev_AOE;
+}
+
+const std::shared_ptr<std::queue<int>>& Enemy::get_visited_AOE() const
+{
+	return visited_AOE;
+}
+
+void Enemy::set_visited_AOE(const std::shared_ptr<std::queue<int>>& _visited_AOE)
+{
+	visited_AOE = _visited_AOE;
 }

@@ -14,7 +14,7 @@ void Hero::tile_effect(const Tile& tile, std::shared_ptr<Target>& tar, const std
 		tar = nullptr;
 		break;
 	case Effect::NONE:
-		tar = hero;
+		if (tar == nullptr) tar = hero;
 		break;
 	}
 }
@@ -41,7 +41,11 @@ bool Hero::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Tar
 	case 3:
 		temp_y -= 1;
 		break;
+	case 4:
+		// stay in same place
+		break;
 	default:
+		//error for invalid direction
 		break;
 	}
 	if (temp_x < 0 || temp_x >= n || temp_y < 0 || temp_y >= n || !tiles[temp_x][temp_y].get_walkability()) return false;

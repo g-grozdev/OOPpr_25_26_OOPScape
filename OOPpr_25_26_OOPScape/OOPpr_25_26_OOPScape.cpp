@@ -1,6 +1,8 @@
 #include <iostream>
+#include "Labyrinth.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	Labyrinth lab("test1.txt");
+	lab.play();
 }

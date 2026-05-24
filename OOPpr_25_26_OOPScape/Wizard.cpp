@@ -9,8 +9,10 @@ bool Wizard::is_within_teleportation_range(int _x, int _y)
 
 Wizard::Wizard(int x, int y, const int& m_c) : Hero(100, 100, x, y, 20, 4, 2, false, 8, m_c, 'W'), teleportation_range(6) {}
 
-bool Wizard::ability(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, int _x = -1, int _y = -1)
+bool Wizard::ability(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero)
 {
+	int _x = -1, _y = -1;
+	std::cin >> _x >> _y;
 	if (!is_within_teleportation_range(_x, _y)) return false;
 
 	int n = tiles.size();
