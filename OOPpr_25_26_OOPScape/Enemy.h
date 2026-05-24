@@ -42,4 +42,5 @@ public:
 	void set_prev_AOE(const std::shared_ptr<std::vector<std::vector<int>>>& _prev_AOE);
 	const std::shared_ptr<std::queue<int>>& get_visited_AOE() const;
 	void set_visited_AOE(const std::shared_ptr<std::queue<int>>& _visited_AOE);
+	virtual void print();
 };

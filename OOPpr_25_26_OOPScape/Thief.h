@@ -9,5 +9,6 @@ public:
 	~Thief() override = default;
 
 	bool move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero) override;
+	void print() override;
 };
 

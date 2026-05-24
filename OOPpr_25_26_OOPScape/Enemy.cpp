@@ -103,8 +103,10 @@ bool Enemy::target_is_in_range(const std::vector<std::vector<Tile>>& tiles, cons
 	int n = tiles.size();
 	int dir[4][2] = { {-1, 0}, {0, 1}, {1, 0}, {0, -1} };
 	bool prev = false;
+	bool prev_prev = false;
 	for (int i = 0; i <= wp.get_range() && is_in_bounds(attack_x, attack_y, n); i++)
 	{
+		prev_prev = prev;
 		if (!tiles[attack_x][attack_y].get_walkability())
 		{
 			if (!prev) 
@@ -135,7 +137,7 @@ bool Enemy::target_is_in_range(const std::vector<std::vector<Tile>>& tiles, cons
 			prev = false;
 		}
 
-		if (i == wp.get_range() && !prev) 
+		if (i == wp.get_range() && !prev_prev) 
 		{
 			return check_AOE(tiles, Position(attack_x, attack_y), tar);
 		}
@@ -304,4 +306,9 @@ const std::shared_ptr<std::queue<int>>& Enemy::get_visited_AOE() const
 void Enemy::set_visited_AOE(const std::shared_ptr<std::queue<int>>& _visited_AOE)
 {
 	visited_AOE = _visited_AOE;
+}
+
+void Enemy::print()
+{
+	std::cout << hp << '\n';
 }

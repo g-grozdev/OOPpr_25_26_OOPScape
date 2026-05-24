@@ -195,8 +195,10 @@ void Labyrinth::apply_attack(const Weapon& wp, bool hero_or_enemy)
 	int n = tiles.size();
 	int dir[4][2] = { {-1, 0}, {0, 1}, {1, 0}, {0, -1} };
 	bool prev = false;
+	bool prev_prev = false;
 	for (int i = 0; i <= wp.get_range() && is_in_bounds(attack_x, attack_y, n); i++)
 	{
+		prev_prev = prev;
 		if (!tiles[attack_x][attack_y].get_walkability())
 		{
 			if (!prev) 
@@ -221,7 +223,7 @@ void Labyrinth::apply_attack(const Weapon& wp, bool hero_or_enemy)
 			prev = false;
 		}
 
-		if (i == wp.get_range() && !prev)
+		if (i == wp.get_range() && !prev_prev)
 		{
 			apply_AOE(Position(attack_x, attack_y), wp, hero_or_enemy);
 		}
@@ -325,9 +327,9 @@ void Labyrinth::damage_oponents(const Position& pos, const Weapon& wp, bool hero
 			if ((*enemies[i].get()).get_x() == pos.get_x() && (*enemies[i].get()).get_y() == pos.get_y())
 			{
 				(*enemies[i].get()).take_damage(wp.get_damage());
-			}
 
-			if (!wp.get_pierce()) return;
+				if (!wp.get_pierce() && wp.get_AOE() == 0) return;
+			}
 		}
 	}
 	else 
@@ -461,6 +463,11 @@ void Labyrinth::print(std::vector<std::vector<char>> display, std::vector<std::v
 		std::cout << '\n';
 	}
 	(*hero.get()).print();
+
+	for (int i = 0; i < enemies.size(); i++) 
+	{
+		(*enemies[i].get()).print();
+	}
 }
 
 Labyrinth::Labyrinth(const char* file_name) : move_counter(0)

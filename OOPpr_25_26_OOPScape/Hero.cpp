@@ -99,7 +99,6 @@ bool Hero::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Tar
 
 void Hero::print() 
 {
-
 	std::cout << "hero hp: " << hp << '\n';
 	if (last_used_ability != -1 && move_counter - last_used_ability <= ability_cooldown)
 	{
