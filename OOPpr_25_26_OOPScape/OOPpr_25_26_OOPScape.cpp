@@ -4,5 +4,12 @@
 int main()
 {
 	Labyrinth lab("test1.txt");
-	lab.play();
+	if (lab.play() == 1) 
+	{
+		std::cout << "you escaped successfully!";
+	}
+	else 
+	{
+		std::cout << "you have been defeated!";
+	}
 }

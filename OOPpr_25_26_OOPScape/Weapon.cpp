@@ -15,7 +15,7 @@ Weapon::Weapon(const Weapon& wp, const Position& _start, int _direction)
 {
 	copy_from_partial(wp);
 	start = _start;
-	direction = direction;
+	direction = _direction;
 }
 
 int Weapon::get_damage() const

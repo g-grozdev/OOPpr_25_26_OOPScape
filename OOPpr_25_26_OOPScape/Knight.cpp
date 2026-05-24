@@ -11,6 +11,7 @@ void Knight::take_damage(int dmg)
 	else 
 	{
 		dmg -= shield_hp;
+		shield_hp = 0;
 		Damageable::take_damage(dmg);
 	}
 }

@@ -7,6 +7,7 @@ void Damageable::take_damage(int dmg)
 	if (dmg > hp) 
 	{
 		hp = 0;
+		return;
 	}
 	hp -= dmg;
 }

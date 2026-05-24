@@ -102,14 +102,18 @@ bool Enemy::target_is_in_range(const std::vector<std::vector<Tile>>& tiles, cons
 
 	int n = tiles.size();
 	int dir[4][2] = { {-1, 0}, {0, 1}, {1, 0}, {0, -1} };
-	bool hit = false;
+	bool prev = false;
 	for (int i = 0; i <= wp.get_range() && is_in_bounds(attack_x, attack_y, n); i++)
 	{
 		if (!tiles[attack_x][attack_y].get_walkability())
 		{
-			attack_x -= dir[direction][0];
-			attack_y -= dir[direction][1];
-			return check_AOE(tiles, Position(attack_x, attack_y), tar);
+			if (!prev) 
+			{
+				attack_x -= dir[direction][0];
+				attack_y -= dir[direction][1];
+				return check_AOE(tiles, Position(attack_x, attack_y), tar);
+			}
+			return false;
 		}
 		if ((attack_x == tar_x && attack_y == tar_y) || (attack_x == hero_x && attack_y == hero_y))
 		{
@@ -124,6 +128,11 @@ bool Enemy::target_is_in_range(const std::vector<std::vector<Tile>>& tiles, cons
 					return true;
 				}
 			}
+			prev = true;
+		}
+		else
+		{
+			prev = false;
 		}
 
 		attack_x += dir[direction][0];
@@ -197,7 +206,7 @@ bool Enemy::is_within_AOE(int x1, int y1, int x2, int y2, int AOE)
 {
 	int dx = x1 - x2;
 	int dy = y1 - y2;
-	return dx * dx + dy * dy <= AOE;
+	return dx * dx + dy * dy <= AOE * AOE;
 }
 
 Enemy::Enemy(int _hp, int _mhp, int _x, int _y, int dmg, int rng, int aoe, bool _pierce, const int& m_c, char d_c,

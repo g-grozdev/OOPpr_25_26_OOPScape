@@ -60,6 +60,32 @@ void Labyrinth::create_prev_and_visited(int size)
 	}
 }
 
+int Labyrinth::convert_coordinates(int x, int y, int n)
+{
+	return x * n + y;
+}
+
+int Labyrinth::convert_x_coordinate(int c, int n)
+{
+	return c / n;
+}
+
+int Labyrinth::convert_y_coordinate(int c, int n)
+{
+	return c % n;
+}
+
+void Labyrinth::reset_prev(int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			(*prev.get())[i][j] = -1;
+		}
+	}
+}
+
 int Labyrinth::play_game_state()
 {
 	print();
@@ -100,7 +126,7 @@ int Labyrinth::play_game_state()
 	for (int i = 0; i < enemies.size(); i++) 
 	{
 		// apply enemy attack
-		(*enemies[i].get()).attack(tiles, target, hero);
+		apply_attack((*enemies[i].get()).attack(tiles, target, hero), false);
 	}
 
 	if (check_state() == 1)
@@ -128,7 +154,7 @@ void Labyrinth::get_player_action()
 
 	if (command == "X") 
 	{
-		(*hero.get()).attack(tiles, target, hero);
+		apply_attack((*hero.get()).attack(tiles, target, hero), true);
 	}
 	else if (command == "A") 
 	{
@@ -147,6 +173,167 @@ int Labyrinth::check_state()
 		return 1;
 	}
 	return 0;
+}
+
+void Labyrinth::apply_attack(const Weapon& wp, bool hero_or_enemy)
+{
+	int attack_x = wp.get_start().get_x();
+	int attack_y = wp.get_start().get_y();
+	int direction = wp.get_direction();
+
+	int n = tiles.size();
+	int dir[4][2] = { {-1, 0}, {0, 1}, {1, 0}, {0, -1} };
+	bool prev = false;
+	for (int i = 0; i <= wp.get_range() && is_in_bounds(attack_x, attack_y, n); i++)
+	{
+		if (!tiles[attack_x][attack_y].get_walkability())
+		{
+			if (!prev) 
+			{
+				attack_x -= dir[direction][0];
+				attack_y -= dir[direction][1];
+				apply_AOE(Position(attack_x, attack_y), wp, hero_or_enemy);
+			}
+			break;
+		}
+		if (hits_an_oponent(Position(attack_x, attack_y), hero_or_enemy))
+		{
+			apply_AOE(Position(attack_x, attack_y), wp, hero_or_enemy);
+			if (!wp.get_pierce())
+			{
+				break;
+			}
+			prev = true;
+		}
+		else 
+		{
+			prev = false;
+		}
+
+		attack_x += dir[direction][0];
+		attack_y += dir[direction][1];
+	}
+
+	clear_enemies();
+}
+
+bool Labyrinth::is_in_bounds(int x, int y, int n)
+{
+	return x > -1 && x < n && y > -1 && y < n;
+}
+
+
+void Labyrinth::apply_AOE(Position impact, const Weapon& wp, bool hero_or_enemy)
+{
+	int n = tiles.size();
+	int AOE = wp.get_AOE();
+	reset_prev(n);
+
+	int init_x = impact.get_x();
+	int init_y = impact.get_y();
+
+	if (is_within_AOE(init_x, init_y, init_x, init_y, AOE))
+	{
+		(*visited.get()).push(convert_coordinates(init_x, init_y, n));
+		(*prev.get())[init_x][init_y] = 0;
+		damage_oponents(Position(init_x, init_y), wp, hero_or_enemy);
+	}
+
+	int dir[4][2] = { {1, 0}, {0, -1}, {-1, 0}, {0, 1} };
+
+	while (!(*visited.get()).empty())
+	{
+		for (int i = (*visited.get()).size(); i > 0; i--)
+		{
+			int ind = (*visited.get()).front();
+			int temp_x = convert_x_coordinate(ind, n);
+			int temp_y = convert_y_coordinate(ind, n);
+			int new_x = -1;
+			int new_y = -1;
+			for (int j = 0; j < 4; j++)
+			{
+				new_x = temp_x + dir[j][0];
+				new_y = temp_y + dir[j][1];
+				if (!is_in_bounds(new_x, new_y, n)) continue;
+				if (tiles[new_x][new_y].get_walkability() && (*prev.get())[new_x][new_y] == -1
+					&& is_within_AOE(new_x, new_y, init_x, init_y, AOE))
+				{
+					(*visited.get()).push(convert_coordinates(new_x, new_y, n));
+					(*prev.get())[new_x][new_y] = 0;
+					damage_oponents(Position(init_x, init_y), wp, hero_or_enemy);
+				}
+			}
+			(*visited.get()).pop();
+		}
+	}
+}
+
+bool Labyrinth::hits_an_oponent(Position pos, bool hero_or_enemy)
+{
+	if (hero_or_enemy) 
+	{
+		for (int i = 0; i < enemies.size(); i++)
+		{
+			if ((*enemies[i].get()).get_x() == pos.get_x() && (*enemies[i].get()).get_y() == pos.get_y())
+			{
+				return true;
+			}
+		}
+	}
+	else 
+	{
+		if (((*target.get()).get_x() == pos.get_x() && (*target.get()).get_y() == pos.get_y())
+			|| ((*hero.get()).get_x() == pos.get_x() && (*hero.get()).get_y() == pos.get_y()))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Labyrinth::is_within_AOE(int x1, int y1, int x2, int y2, int AOE)
+{
+	int dx = x1 - x2;
+	int dy = y1 - y2;
+	return dx * dx + dy * dy <= AOE * AOE;
+}
+
+void Labyrinth::damage_oponents(Position pos, const Weapon& wp, bool hero_or_enemy)
+{
+	if (hero_or_enemy) 
+	{
+		for (int i = 0; i < enemies.size(); i++)
+		{
+			if ((*enemies[i].get()).get_x() == pos.get_x() && (*enemies[i].get()).get_y() == pos.get_y())
+			{
+				(*enemies[i].get()).take_damage(wp.get_damage());
+			}
+		}
+	}
+	else 
+	{
+		if ((*target.get()).get_x() == pos.get_x() && (*target.get()).get_y() == pos.get_y())
+		{
+			(*target.get()).take_damage(wp.get_damage());
+		}
+		if ((*hero.get()).get_x() == pos.get_x() && (*hero.get()).get_y() == pos.get_y())
+		{
+			(*hero.get()).take_damage(wp.get_damage());
+		}
+	}
+}
+
+void Labyrinth::clear_enemies()
+{
+	enemies.erase
+	(
+		std::remove_if(enemies.begin(), enemies.end(),
+			[](const std::unique_ptr<Enemy>& enemy)
+			{
+				return (*enemy.get()).get_hp() == 0;
+			}),
+		enemies.end()
+	);
 }
 
 void Labyrinth::print()
@@ -269,7 +456,7 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0)
 		file.get();
 	}
 
-	if (!has_end || hero == nullptr) 
+	if (!has_end || hero == nullptr || !file.eof()) 
 	{
 		// throw exception of invalid file;
 	}
