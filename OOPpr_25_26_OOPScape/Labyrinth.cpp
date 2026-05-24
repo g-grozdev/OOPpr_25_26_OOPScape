@@ -75,6 +75,8 @@ int Labyrinth::play_game_state()
 		successful_movement = (*hero.get()).move(tiles, target, hero, direction);
 	} while (!successful_movement);
 
+	print();
+	
 	if (check_state() == 1) 
 	{
 		return 1;
@@ -121,7 +123,11 @@ int Labyrinth::get_player_movement()
 	std::getline(std::cin, command);
 	while (command != "U" && command != "R" && command != "D" && command != "L" && command != "S")
 	{
-		std::cout << "Invalid command please try again\n";
+		// check for whether actual input was made (sometimes the wizards ability messes with the buffer and causes a false alarm)
+		if (command != "") 
+		{
+			std::cout << "Invalid command please try again\n";
+		}
 		std::getline(std::cin, command);
 	}
 
@@ -221,12 +227,35 @@ void Labyrinth::print()
 	y = (*hero.get()).get_y();
 	d_c = (*hero.get()).get_display_char();
 	display[x][y] = d_c;
-
+	std::cout << "   ";
+	for (int i = 0; i < tiles.size(); i++) 
+	{
+		if (i < 10) 
+		{
+			std::cout << ' ' << i;
+		}
+		else 
+		{
+			std::cout << i;
+		}
+	}
+	std::cout << "\n   ";
+	for (int i = 0; i < tiles.size(); i++) std::cout << "__";
+	std::cout << '\n';
 	for (int i = 0; i < tiles.size(); i++)
 	{
+		if (i < 10)
+		{
+			std::cout << ' ' << i;
+		}
+		else
+		{
+			std::cout << i;
+		}
+		std::cout << '|';
 		for (int j = 0; j < tiles.size(); j++)
 		{
-			std::cout << display[i][j] << ' ';
+			std::cout << ' ' << display[i][j];
 		}
 		std::cout << '\n';
 	}
