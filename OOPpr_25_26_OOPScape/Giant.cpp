@@ -16,7 +16,7 @@ Weapon Giant::attack(const std::vector<std::vector<Tile>>& tiles, std::shared_pt
 {
 	if (move_counter % 3 != 2)
 	{
-		Enemy::attack(tiles, tar, hero);
+		return Enemy::attack(tiles, tar, hero);
 	}
 	return Weapon(0, -1, 0, false);
 }

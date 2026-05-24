@@ -123,7 +123,7 @@ int Labyrinth::play_game_state()
 
 	print();
 
-	Sleep(1500);
+	Sleep(1000);
 
 	for (int i = 0; i < enemies.size(); i++) 
 	{
@@ -133,7 +133,7 @@ int Labyrinth::play_game_state()
 
 	print();
 
-	Sleep(1500);
+	Sleep(1000);
 
 	if (check_state() == 1)
 	{
@@ -170,6 +170,11 @@ void Labyrinth::get_player_action()
 
 int Labyrinth::check_state()
 {
+	if (target != nullptr && (*target.get()).get_hp() == 0) 
+	{
+		target = hero;
+	}
+
 	if ((*hero.get()).get_hp() == 0)
 	{
 		return -1;
@@ -321,17 +326,30 @@ void Labyrinth::damage_oponents(const Position& pos, const Weapon& wp, bool hero
 			{
 				(*enemies[i].get()).take_damage(wp.get_damage());
 			}
+
+			if (!wp.get_pierce()) return;
 		}
 	}
 	else 
 	{
-		if ((*target.get()).get_x() == pos.get_x() && (*target.get()).get_y() == pos.get_y())
+		if (target.get() != hero.get()) 
 		{
-			(*target.get()).take_damage(wp.get_damage());
+			if ((*target.get()).get_x() == pos.get_x() && (*target.get()).get_y() == pos.get_y())
+			{
+				(*target.get()).take_damage(wp.get_damage());
+			}
+			if (!wp.get_pierce()) return;
+			if ((*hero.get()).get_x() == pos.get_x() && (*hero.get()).get_y() == pos.get_y())
+			{
+				(*hero.get()).take_damage(wp.get_damage());
+			}
 		}
-		if ((*hero.get()).get_x() == pos.get_x() && (*hero.get()).get_y() == pos.get_y())
+		else 
 		{
-			(*hero.get()).take_damage(wp.get_damage());
+			if ((*hero.get()).get_x() == pos.get_x() && (*hero.get()).get_y() == pos.get_y())
+			{
+				(*hero.get()).take_damage(wp.get_damage());
+			}
 		}
 	}
 }
