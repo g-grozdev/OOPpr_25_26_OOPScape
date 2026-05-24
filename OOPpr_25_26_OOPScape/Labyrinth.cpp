@@ -101,7 +101,7 @@ int Labyrinth::play_game_state()
 	} while (!successful_movement);
 
 	print();
-	
+
 	if (check_state() == 1) 
 	{
 		return 1;
@@ -123,11 +123,17 @@ int Labyrinth::play_game_state()
 
 	print();
 
+	Sleep(1500);
+
 	for (int i = 0; i < enemies.size(); i++) 
 	{
 		// apply enemy attack
 		apply_attack((*enemies[i].get()).attack(tiles, target, hero), false);
 	}
+
+	print();
+
+	Sleep(1500);
 
 	if (check_state() == 1)
 	{
@@ -210,6 +216,11 @@ void Labyrinth::apply_attack(const Weapon& wp, bool hero_or_enemy)
 			prev = false;
 		}
 
+		if (i == wp.get_range() && !prev)
+		{
+			apply_AOE(Position(attack_x, attack_y), wp, hero_or_enemy);
+		}
+
 		attack_x += dir[direction][0];
 		attack_y += dir[direction][1];
 	}
@@ -223,7 +234,7 @@ bool Labyrinth::is_in_bounds(int x, int y, int n)
 }
 
 
-void Labyrinth::apply_AOE(Position impact, const Weapon& wp, bool hero_or_enemy)
+void Labyrinth::apply_AOE(const Position& impact, const Weapon& wp, bool hero_or_enemy)
 {
 	int n = tiles.size();
 	int AOE = wp.get_AOE();
@@ -237,6 +248,7 @@ void Labyrinth::apply_AOE(Position impact, const Weapon& wp, bool hero_or_enemy)
 		(*visited.get()).push(convert_coordinates(init_x, init_y, n));
 		(*prev.get())[init_x][init_y] = 0;
 		damage_oponents(Position(init_x, init_y), wp, hero_or_enemy);
+		attacked.push(Position(init_x, init_y));
 	}
 
 	int dir[4][2] = { {1, 0}, {0, -1}, {-1, 0}, {0, 1} };
@@ -260,7 +272,8 @@ void Labyrinth::apply_AOE(Position impact, const Weapon& wp, bool hero_or_enemy)
 				{
 					(*visited.get()).push(convert_coordinates(new_x, new_y, n));
 					(*prev.get())[new_x][new_y] = 0;
-					damage_oponents(Position(init_x, init_y), wp, hero_or_enemy);
+					damage_oponents(Position(new_x, new_y), wp, hero_or_enemy);
+					attacked.push(Position(new_x, new_y));
 				}
 			}
 			(*visited.get()).pop();
@@ -268,7 +281,7 @@ void Labyrinth::apply_AOE(Position impact, const Weapon& wp, bool hero_or_enemy)
 	}
 }
 
-bool Labyrinth::hits_an_oponent(Position pos, bool hero_or_enemy)
+bool Labyrinth::hits_an_oponent(const Position& pos, bool hero_or_enemy)
 {
 	if (hero_or_enemy) 
 	{
@@ -298,7 +311,7 @@ bool Labyrinth::is_within_AOE(int x1, int y1, int x2, int y2, int AOE)
 	return dx * dx + dy * dy <= AOE * AOE;
 }
 
-void Labyrinth::damage_oponents(Position pos, const Weapon& wp, bool hero_or_enemy)
+void Labyrinth::damage_oponents(const Position& pos, const Weapon& wp, bool hero_or_enemy)
 {
 	if (hero_or_enemy) 
 	{
@@ -340,13 +353,24 @@ void Labyrinth::print()
 {
 	std::system("CLS");
 	std::vector<std::vector<char>> display;
+	std::vector<std::vector<bool>> colored;
 	for (int i = 0; i < tiles.size(); i++) 
 	{
 		display.push_back(std::vector<char>());
+		colored.push_back(std::vector<bool>());
 		for (int j = 0; j < tiles.size(); j++)
 		{
+			colored[i].push_back(false);
 			display[i].push_back(tiles[i][j].get_display_char());
 		}
+	}
+
+	while (!attacked.empty()) 
+	{
+		int x = attacked.front().get_x();
+		int y = attacked.front().get_y();
+		colored[x][y] = true;
+		attacked.pop();
 	}
 
 	int x = -1;
@@ -373,14 +397,20 @@ void Labyrinth::print()
 	y = (*hero.get()).get_y();
 	d_c = (*hero.get()).get_display_char();
 	display[x][y] = d_c;
+
+	print(display, colored);
+}
+
+void Labyrinth::print(std::vector<std::vector<char>> display, std::vector<std::vector<bool>> colored)
+{
 	std::cout << "   ";
-	for (int i = 0; i < tiles.size(); i++) 
+	for (int i = 0; i < tiles.size(); i++)
 	{
-		if (i < 10) 
+		if (i < 10)
 		{
 			std::cout << ' ' << i;
 		}
-		else 
+		else
 		{
 			std::cout << i;
 		}
@@ -401,7 +431,14 @@ void Labyrinth::print()
 		std::cout << '|';
 		for (int j = 0; j < tiles.size(); j++)
 		{
-			std::cout << ' ' << display[i][j];
+			if (colored[i][j]) 
+			{
+				std::cout << ' ' << "\033[48;2;235;75;12m" << display[i][j] << "\033[0m";
+			}
+			else 
+			{
+				std::cout << ' ' << display[i][j];
+			}
 		}
 		std::cout << '\n';
 	}

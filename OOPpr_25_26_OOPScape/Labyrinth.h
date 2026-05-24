@@ -2,7 +2,10 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+// for clearing screen
 #include <stdlib.h>
+//for sleeping thread so attacks can be seen
+#include <windows.h>
 #include "HeroFactory.h"
 #include "EnemyFactory.h"
 #include "TileFactory.h"
@@ -30,13 +33,14 @@ class Labyrinth
 	int check_state();
 	void apply_attack(const Weapon& wp, bool hero_or_enemy);
 	bool is_in_bounds(int x, int y, int n);
-	void apply_AOE(Position impact, const Weapon& wp, bool hero_or_enemy);
-	bool hits_an_oponent(Position pos, bool hero_or_enemy);
+	void apply_AOE(const Position& impact, const Weapon& wp, bool hero_or_enemy);
+	bool hits_an_oponent(const Position& pos, bool hero_or_enemy);
 	bool is_within_AOE(int x1, int y1, int x2, int y2, int AOE);
-	void damage_oponents(Position pos, const Weapon& wp, bool hero_or_enemy);
+	void damage_oponents(const Position& pos, const Weapon& wp, bool hero_or_enemy);
 
 	void clear_enemies();
 	void print();
+	void print(std::vector<std::vector<char>> display, std::vector<std::vector<bool>> colored);
 
 public:
 	Labyrinth(const char* file_name);

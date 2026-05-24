@@ -135,6 +135,11 @@ bool Enemy::target_is_in_range(const std::vector<std::vector<Tile>>& tiles, cons
 			prev = false;
 		}
 
+		if (i == wp.get_range() && !prev) 
+		{
+			return check_AOE(tiles, Position(attack_x, attack_y), tar);
+		}
+
 		attack_x += dir[direction][0];
 		attack_y += dir[direction][1];
 	}
