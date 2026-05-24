@@ -1,5 +1,7 @@
 #include "Skeleton.h"
 
+std::shared_ptr<int> Skeleton::communal_bonus_count = nullptr;
+
 void Skeleton::apply_bonus()
 {
 	int bonus = (*bonus_count.get());
@@ -11,8 +13,20 @@ void Skeleton::apply_bonus()
 	last_bonus_applied = (*bonus_count.get());
 }
 
-Skeleton::Skeleton(int x, int y, const int& m_c) : Enemy(50, 120, x, y, 10, 1, 0, false, m_c, 's', nullptr, nullptr), bonus_count(nullptr),
-	last_bonus_applied(0) { }
+void Skeleton::reset_bonus_count()
+{
+	communal_bonus_count = nullptr;
+}
+
+Skeleton::Skeleton(int x, int y, const int& m_c) :
+	Enemy(50, 120, x, y, 10, 1, 0, false, m_c, 's', nullptr, nullptr), bonus_count(nullptr), last_bonus_applied(0) 
+{
+	if (communal_bonus_count == nullptr) 
+	{
+		communal_bonus_count = std::make_shared<int>();
+	}
+	bonus_count = communal_bonus_count;
+}
 
 void Skeleton::take_damage(int dmg)
 {

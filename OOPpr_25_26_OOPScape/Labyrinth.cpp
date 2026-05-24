@@ -234,6 +234,8 @@ void Labyrinth::print()
 
 Labyrinth::Labyrinth(const char* file_name) : move_counter(0)
 {
+	Skeleton::reset_bonus_count();
+	
 	std::fstream file(file_name, std::ios::in);
 
 	if (!file.is_open()) 

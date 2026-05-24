@@ -3,12 +3,16 @@
 
 class Skeleton : public Enemy
 {
+	static std::shared_ptr<int> communal_bonus_count;
+
 	std::shared_ptr<int> bonus_count;
 	int last_bonus_applied;
 
 	void apply_bonus();
 
 public:
+	static void reset_bonus_count();
+
 	Skeleton(int x, int y, const int& m_c);
 	~Skeleton() override = default;
 
