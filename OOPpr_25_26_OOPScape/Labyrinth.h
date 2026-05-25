@@ -29,9 +29,9 @@ class Labyrinth
 	void reset_prev(int n);
 
 	int play_game_state();
-	void get_player_action();
+	bool get_player_action();
 	int check_state();
-	void apply_attack(const Weapon& wp, bool hero_or_enemy);
+	bool apply_attack(const Weapon& wp, bool hero_or_enemy);
 	bool is_in_bounds(int x, int y, int n);
 	void apply_AOE(const Position& impact, const Weapon& wp, bool hero_or_enemy);
 	bool hits_an_oponent(const Position& pos, bool hero_or_enemy);

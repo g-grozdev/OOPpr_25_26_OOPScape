@@ -90,15 +90,15 @@ int Labyrinth::play_game_state()
 {
 	print();
 
-	bool successful_movement = true;
+	bool success = true;
 	do
 	{
-		if (!successful_movement) 
+		if (!success) 
 		{
 			std::cout << "invalid movement please try again\n";
 		}
-		successful_movement = (*hero.get()).move(tiles, target, hero);
-	} while (!successful_movement);
+		success = (*hero.get()).move(tiles, target, hero);
+	} while (!success);
 
 	print();
 
@@ -119,7 +119,15 @@ int Labyrinth::play_game_state()
 	print();
 
 	// apply player attack
-	get_player_action();
+	success = true;
+	do
+	{
+		if (!success)
+		{
+			std::cout << "invalid action please try again\n";
+		}
+		success = get_player_action();
+	} while (!success);
 
 	print();
 
@@ -147,12 +155,12 @@ int Labyrinth::play_game_state()
 	return 0;
 }
 
-void Labyrinth::get_player_action()
+bool Labyrinth::get_player_action()
 {
-	std::cout << "Enter a command for an action : X (attack) ; A (ability)\n";
+	std::cout << "Enter a command for an action : X (attack) ; A (ability) ; S (skip action)\n";
 	std::string command = "";
 	std::getline(std::cin, command);
-	while (command != "X" && command != "A")
+	while (command != "X" && command != "A" && command != "S")
 	{
 		std::cout << "Invalid command please try again\n";
 		std::getline(std::cin, command);
@@ -160,12 +168,18 @@ void Labyrinth::get_player_action()
 
 	if (command == "X") 
 	{
-		apply_attack((*hero.get()).attack(tiles, target, hero), true);
+		return apply_attack((*hero.get()).attack(tiles, target, hero), true);
 	}
 	else if (command == "A") 
 	{
-		(*hero.get()).ability(tiles, target, hero);
+		return (*hero.get()).ability(tiles, target, hero);
 	}
+	else if (command == "S") 
+	{
+		return true;
+	}
+
+	return false;
 }
 
 int Labyrinth::check_state()
@@ -186,7 +200,7 @@ int Labyrinth::check_state()
 	return 0;
 }
 
-void Labyrinth::apply_attack(const Weapon& wp, bool hero_or_enemy)
+bool Labyrinth::apply_attack(const Weapon& wp, bool hero_or_enemy)
 {
 	int attack_x = wp.get_start().get_x();
 	int attack_y = wp.get_start().get_y();
@@ -233,6 +247,8 @@ void Labyrinth::apply_attack(const Weapon& wp, bool hero_or_enemy)
 	}
 
 	clear_enemies();
+
+	return true;
 }
 
 bool Labyrinth::is_in_bounds(int x, int y, int n)
