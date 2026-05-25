@@ -209,20 +209,25 @@ bool Labyrinth::apply_attack(const Weapon& wp, bool hero_or_enemy)
 	int n = tiles.size();
 	int dir[4][2] = { {-1, 0}, {0, 1}, {1, 0}, {0, -1} };
 	bool prev = false;
-	bool prev_prev = false;
 	for (int i = 0; i <= wp.get_range() && is_in_bounds(attack_x, attack_y, n); i++)
 	{
-		prev_prev = prev;
 		if (!tiles[attack_x][attack_y].get_walkability())
 		{
 			if (!prev) 
 			{
 				attack_x -= dir[direction][0];
 				attack_y -= dir[direction][1];
-				apply_AOE(Position(attack_x, attack_y), wp, hero_or_enemy);
+				// if attacks have a AOE (explode) once they reach their max range they explode
+				if (wp.get_AOE() != 0)
+				{
+					apply_AOE(Position(attack_x, attack_y), wp, hero_or_enemy);
+				}
 			}
 			break;
 		}
+
+		prev = false;
+
 		if (hits_an_oponent(Position(attack_x, attack_y), hero_or_enemy))
 		{
 			apply_AOE(Position(attack_x, attack_y), wp, hero_or_enemy);
@@ -232,14 +237,14 @@ bool Labyrinth::apply_attack(const Weapon& wp, bool hero_or_enemy)
 			}
 			prev = true;
 		}
-		else 
-		{
-			prev = false;
-		}
 
-		if (i == wp.get_range() && !prev_prev)
+		if (i == wp.get_range() && !prev)
 		{
-			apply_AOE(Position(attack_x, attack_y), wp, hero_or_enemy);
+			// if attacks have a AOE (explode) once they reach their max range they explode
+			if (wp.get_AOE() != 0) 
+			{
+				apply_AOE(Position(attack_x, attack_y), wp, hero_or_enemy);
+			}
 		}
 
 		attack_x += dir[direction][0];
@@ -356,7 +361,7 @@ void Labyrinth::damage_oponents(const Position& pos, const Weapon& wp, bool hero
 			{
 				(*target.get()).take_damage(wp.get_damage());
 			}
-			if (!wp.get_pierce()) return;
+			if (!wp.get_pierce() && wp.get_AOE() == 0) return;
 			if ((*hero.get()).get_x() == pos.get_x() && (*hero.get()).get_y() == pos.get_y())
 			{
 				(*hero.get()).take_damage(wp.get_damage());
