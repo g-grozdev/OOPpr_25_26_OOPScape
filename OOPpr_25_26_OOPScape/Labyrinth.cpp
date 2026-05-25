@@ -60,6 +60,20 @@ void Labyrinth::create_prev_and_visited(int size)
 	}
 }
 
+void Labyrinth::create_display_and_colored(int size)
+{
+	for (int i = 0; i < tiles.size(); i++)
+	{
+		display.push_back(std::vector<char>());
+		colored.push_back(std::vector<bool>());
+		for (int j = 0; j < tiles.size(); j++)
+		{
+			colored[i].push_back(false);
+			display[i].push_back('\0');
+		}
+	}
+}
+
 int Labyrinth::convert_coordinates(int x, int y, int n)
 {
 	return x * n + y;
@@ -86,9 +100,48 @@ void Labyrinth::reset_prev(int n)
 	}
 }
 
+void Labyrinth::reset_display_and_colored(int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			colored[i][j] = false;
+			display[i][j] = '\0';
+		}
+	}
+}
+
+void Labyrinth::reset_affected_tiles_color()
+{
+	affected_tiles_color = "\033[48;2;0;0;0m";
+}
+
+void Labyrinth::set_affected_tiles_color_attack()
+{
+	affected_tiles_color = "\033[48;2;224;55;29m";
+}
+
+void Labyrinth::set_affected_tiles_color_ability()
+{
+	affected_tiles_color = "\033[48;2;10;130;44m";
+}
+
+void Labyrinth::get_display(int n)
+{
+	for (int i = 0; i < n; i++) 
+	{
+		for (int j = 0; j < n; j++) 
+		{
+			display[i][j] = tiles[i][j].get_display_char();
+		}
+	}
+}
+
 int Labyrinth::play_game_state()
 {
 	print();
+	reset_affected_tiles_color();
 
 	bool success = true;
 	do
@@ -101,6 +154,7 @@ int Labyrinth::play_game_state()
 	} while (!success);
 
 	print();
+	reset_affected_tiles_color();
 
 	if (check_state() == 1) 
 	{
@@ -117,8 +171,9 @@ int Labyrinth::play_game_state()
 	}
 
 	print();
+	reset_affected_tiles_color();
 
-	// apply player attack
+	// apply player action
 	success = true;
 	do
 	{
@@ -130,16 +185,19 @@ int Labyrinth::play_game_state()
 	} while (!success);
 
 	print();
+	reset_affected_tiles_color();
 
 	Sleep(1000);
 
 	for (int i = 0; i < enemies.size(); i++) 
 	{
 		// apply enemy attack
+		set_affected_tiles_color_attack();
 		apply_attack((*enemies[i].get()).attack(tiles, target, hero), false);
 	}
 
 	print();
+	reset_affected_tiles_color();
 
 	Sleep(1000);
 
@@ -168,14 +226,21 @@ bool Labyrinth::get_player_action()
 
 	if (command == "X") 
 	{
+		set_affected_tiles_color_attack();
+		affected_tiles_color = "\033[48;2;224;55;29m";
 		return apply_attack((*hero.get()).attack(tiles, target, hero), true);
 	}
 	else if (command == "A") 
 	{
+		set_affected_tiles_color_ability();
+		(*hero.get()).get_affected_by_ability_tiles(tiles, target, hero, affected_tiles);
+		print();
+		Sleep(650);
 		return (*hero.get()).ability(tiles, target, hero);
 	}
 	else if (command == "S") 
 	{
+		reset_affected_tiles_color();
 		return true;
 	}
 
@@ -276,7 +341,7 @@ void Labyrinth::apply_AOE(const Position& impact, const Weapon& wp, bool hero_or
 		(*visited.get()).push(convert_coordinates(init_x, init_y, n));
 		(*prev.get())[init_x][init_y] = 0;
 		damage_oponents(Position(init_x, init_y), wp, hero_or_enemy);
-		attacked.push(Position(init_x, init_y));
+		affected_tiles.push(Position(init_x, init_y));
 	}
 
 	int dir[4][2] = { {1, 0}, {0, -1}, {-1, 0}, {0, 1} };
@@ -301,7 +366,7 @@ void Labyrinth::apply_AOE(const Position& impact, const Weapon& wp, bool hero_or
 					(*visited.get()).push(convert_coordinates(new_x, new_y, n));
 					(*prev.get())[new_x][new_y] = 0;
 					damage_oponents(Position(new_x, new_y), wp, hero_or_enemy);
-					attacked.push(Position(new_x, new_y));
+					affected_tiles.push(Position(new_x, new_y));
 				}
 			}
 			(*visited.get()).pop();
@@ -393,25 +458,17 @@ void Labyrinth::clear_enemies()
 void Labyrinth::print()
 {
 	std::system("CLS");
-	std::vector<std::vector<char>> display;
-	std::vector<std::vector<bool>> colored;
-	for (int i = 0; i < tiles.size(); i++) 
-	{
-		display.push_back(std::vector<char>());
-		colored.push_back(std::vector<bool>());
-		for (int j = 0; j < tiles.size(); j++)
-		{
-			colored[i].push_back(false);
-			display[i].push_back(tiles[i][j].get_display_char());
-		}
-	}
 
-	while (!attacked.empty()) 
+	reset_display_and_colored(tiles.size());
+
+	get_display(tiles.size());
+
+	while (!affected_tiles.empty()) 
 	{
-		int x = attacked.front().get_x();
-		int y = attacked.front().get_y();
+		int x = affected_tiles.front().get_x();
+		int y = affected_tiles.front().get_y();
 		colored[x][y] = true;
-		attacked.pop();
+		affected_tiles.pop();
 	}
 
 	int x = -1;
@@ -439,10 +496,10 @@ void Labyrinth::print()
 	d_c = (*hero.get()).get_display_char();
 	display[x][y] = d_c;
 
-	print(display, colored);
+	print_to_console();
 }
 
-void Labyrinth::print(std::vector<std::vector<char>> display, std::vector<std::vector<bool>> colored)
+void Labyrinth::print_to_console()
 {
 	std::cout << "   ";
 	for (int i = 0; i < tiles.size(); i++)
@@ -475,7 +532,7 @@ void Labyrinth::print(std::vector<std::vector<char>> display, std::vector<std::v
 		{
 			if (colored[i][j]) 
 			{
-				std::cout << ' ' << "\033[48;2;235;75;12m" << display[i][j] << "\033[0m" << ' ';
+				std::cout << ' ' << affected_tiles_color << display[i][j] << affected_tiles_color_reset << ' ';
 			}
 			else 
 			{
@@ -503,36 +560,36 @@ void Labyrinth::print(std::vector<std::vector<char>> display, std::vector<std::v
 	std::cout << "-------\n";
 }
 
-Labyrinth::Labyrinth(const char* file_name) : move_counter(0)
+Labyrinth::Labyrinth(const char* file_name) : move_counter(0), affected_tiles_color("\033[48;2;0;0;0m"), affected_tiles_color_reset("\033[0m")
 {
 	Skeleton::reset_bonus_count();
-	
+
 	std::fstream file(file_name, std::ios::in);
 
-	if (!file.is_open()) 
+	if (!file.is_open())
 	{
 		// throw exception of being unable to open file;
 	}
-	
+
 	int size = -1;
-	if (file.eof()) 
+	if (file.eof())
 	{
 		// throw exception of invalid file;
 	}
-	else 
+	else
 	{
 		file >> size;
 		file.get();
 	}
 	Position::set_max(size);
 
-	if (size < 2 || size > 64) 
+	if (size < 2 || size > 64)
 	{
 		// throw exception of invalid file;
 	}
 
 	bool has_end = false;
-	for (int i = 0; i < size; i++) 
+	for (int i = 0; i < size; i++)
 	{
 		tiles.push_back(std::vector<Tile>());
 		for (int j = 0; j < size; j++)
@@ -551,12 +608,14 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0)
 		file.get();
 	}
 
-	if (!has_end || hero == nullptr || !file.eof()) 
+	if (!has_end || hero == nullptr || !file.eof())
 	{
 		// throw exception of invalid file;
 	}
 
 	create_prev_and_visited(size);
+
+	create_display_and_colored(size);
 
 	file.close();
 }

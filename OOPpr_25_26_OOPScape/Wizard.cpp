@@ -7,7 +7,7 @@ bool Wizard::is_within_teleportation_range(int _x, int _y)
 	return dx * dx + dy * dy <= teleportation_range * teleportation_range;
 }
 
-Wizard::Wizard(int x, int y, const int& m_c) : Hero(100, 100, x, y, 20, 4, 2, false, 8, m_c, 'W'), teleportation_range(6) {}
+Wizard::Wizard(int x, int y, const int& m_c) : Hero(100, 100, x, y, 20, 4, 2, false, 8, m_c, 'W'), teleportation_range(6) { }
 
 bool Wizard::ability(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero)
 {
@@ -34,4 +34,18 @@ bool Wizard::ability(const std::vector<std::vector<Tile>>& tiles, std::shared_pt
 	last_used_ability = move_counter;
 
 	return true;
+}
+
+void Wizard::get_affected_by_ability_tiles(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, std::queue<Position>& affected_tiles)
+{
+	for (int i = 0; i < tiles.size(); i++) 
+	{
+		for (int j = 0; j < tiles.size(); j++) 
+		{
+			if (tiles[i][j].get_walkability() && is_within_teleportation_range(i, j)) 
+			{
+				affected_tiles.push(Position(i, j));
+			}
+		}
+	}
 }

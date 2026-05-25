@@ -12,3 +12,8 @@ bool Archer::ability(const std::vector<std::vector<Tile>>& tiles, std::shared_pt
 
 	return true;
 }
+
+void Archer::get_affected_by_ability_tiles(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, std::queue<Position>& affected_tiles)
+{
+	affected_tiles.push(Position(x, y));
+}

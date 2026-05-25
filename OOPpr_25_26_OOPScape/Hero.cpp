@@ -43,6 +43,11 @@ Weapon Hero::attack(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr
 	return Character::attack(tiles, tar, hero, direction);
 }
 
+void Hero::get_affected_by_ability_tiles(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, std::queue<Position>& affected_tiles)
+{
+	return;
+}
+
 bool Hero::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero> hero)
 {
 	std::cout << "Enter a command to move in a direction : U (up) ; R (right) ; D (down) ; L (left) ; S (stay in the same place)\n";
