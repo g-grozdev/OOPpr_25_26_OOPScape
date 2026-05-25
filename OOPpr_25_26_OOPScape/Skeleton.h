@@ -9,6 +9,7 @@ class Skeleton : public Enemy
 	int last_bonus_applied;
 
 	void apply_bonus();
+	int get_damage();
 
 public:
 	static void reset_bonus_count();
@@ -21,5 +22,6 @@ public:
 
 	const std::shared_ptr<int>& get_bonus_count() const;
 	void set_bonus_count(const std::shared_ptr<int>& _bonus_count);
+	void print() override;
 };
 

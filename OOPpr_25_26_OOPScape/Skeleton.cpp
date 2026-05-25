@@ -13,6 +13,15 @@ void Skeleton::apply_bonus()
 	last_bonus_applied = (*bonus_count.get());
 }
 
+int Skeleton::get_damage()
+{
+	if (last_bonus_applied != (*bonus_count.get())) 
+	{
+		apply_bonus();
+	}
+	return wp.get_damage();
+}
+
 void Skeleton::reset_bonus_count()
 {
 	communal_bonus_count = nullptr;
@@ -63,4 +72,12 @@ const std::shared_ptr<int>& Skeleton::get_bonus_count() const
 void Skeleton::set_bonus_count(const std::shared_ptr<int>& _bonus_count)
 {
 	bonus_count = _bonus_count;
+}
+
+void Skeleton::print()
+{
+	int damage = get_damage();
+	std::cout << "skeleton hp: ";
+	Enemy::print();
+	std::cout << "current damage: " << damage << '\n';
 }
