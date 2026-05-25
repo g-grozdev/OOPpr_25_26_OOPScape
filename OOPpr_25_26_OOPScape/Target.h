@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include "Damageable.h"
 #include "Position.h"
 
@@ -11,5 +12,7 @@ public:
 	~Target() override = default;
 	char get_display_char() const;
 	void set_display_char(char d_c);
+
+	virtual void print();
 };
 

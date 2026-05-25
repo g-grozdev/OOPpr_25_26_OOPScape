@@ -488,6 +488,13 @@ void Labyrinth::print(std::vector<std::vector<char>> display, std::vector<std::v
 	std::cout << "-------\n";
 	(*hero.get()).print();
 
+	if (hero.get() != target.get()) 
+	{
+		std::cout << "-------\n";
+		std::cout << "target hp: ";
+		(*target.get()).print();
+	}
+
 	for (int i = 0; i < enemies.size(); i++) 
 	{
 		std::cout << "-------\n";

@@ -11,3 +11,8 @@ void Target::set_display_char(char d_c)
 {
 	display_char = d_c;
 }
+
+void Target::print()
+{
+	std::cout << hp << '\n';
+}

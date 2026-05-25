@@ -11,7 +11,7 @@ void Hero::tile_effect(const Tile& tile, std::shared_ptr<Target>& tar, const std
 		take_damage(5);
 		break;
 	case Effect::HIDE:
-		tar = nullptr;
+		if (tar.get() == hero.get()) tar = nullptr;
 		break;
 	case Effect::NONE:
 		if (tar == nullptr) tar = hero;
@@ -99,7 +99,8 @@ bool Hero::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Tar
 
 void Hero::print() 
 {
-	std::cout << "hero hp: " << hp << '\n';
+	std::cout << "hero hp: ";
+	Target::print();
 	if (last_used_ability != -1 && move_counter - last_used_ability <= ability_cooldown)
 	{
 		std::cout << "ability on cooldown for " << ability_cooldown - (move_counter - last_used_ability) + 1 << " moves\n";

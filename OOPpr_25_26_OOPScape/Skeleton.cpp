@@ -78,6 +78,6 @@ void Skeleton::print()
 {
 	int damage = get_damage();
 	std::cout << "skeleton hp: ";
-	Enemy::print();
+	Target::print();
 	std::cout << "current damage: " << damage << '\n';
 }

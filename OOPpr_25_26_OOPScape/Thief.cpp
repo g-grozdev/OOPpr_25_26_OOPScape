@@ -16,7 +16,7 @@ bool Thief::move(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Ta
 void Thief::print()
 {
 	std::cout << "thief hp: ";
-	Enemy::print();
+	Target::print();
 	if (move_counter % 2 == 1) 
 	{
 		std::cout << "thief moves twice\n";

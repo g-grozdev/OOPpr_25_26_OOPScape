@@ -24,7 +24,7 @@ Weapon Giant::attack(const std::vector<std::vector<Tile>>& tiles, std::shared_pt
 void Giant::print()
 {
 	std::cout << "giant hp: ";
-	Enemy::print();
+	Target::print();
 	if (move_counter % 3 == 2) 
 	{
 		std::cout << "giant is asleep\n";

@@ -103,20 +103,26 @@ bool Enemy::target_is_in_range(const std::vector<std::vector<Tile>>& tiles, cons
 	int n = tiles.size();
 	int dir[4][2] = { {-1, 0}, {0, 1}, {1, 0}, {0, -1} };
 	bool prev = false;
-	bool prev_prev = false;
 	for (int i = 0; i <= wp.get_range() && is_in_bounds(attack_x, attack_y, n); i++)
 	{
-		prev_prev = prev;
 		if (!tiles[attack_x][attack_y].get_walkability())
 		{
 			if (!prev) 
 			{
 				attack_x -= dir[direction][0];
 				attack_y -= dir[direction][1];
-				return check_AOE(tiles, Position(attack_x, attack_y), tar);
+				// if attacks have a AOE (explode) once they reach their max range they explode
+				if (wp.get_AOE() != 0) 
+				{
+					return check_AOE(tiles, Position(attack_x, attack_y), tar);
+				}
+				return false;
 			}
 			return false;
 		}
+
+		prev = false;
+		
 		if ((attack_x == tar_x && attack_y == tar_y) || (attack_x == hero_x && attack_y == hero_y))
 		{
 			if (!wp.get_pierce())
@@ -132,14 +138,15 @@ bool Enemy::target_is_in_range(const std::vector<std::vector<Tile>>& tiles, cons
 			}
 			prev = true;
 		}
-		else
-		{
-			prev = false;
-		}
 
-		if (i == wp.get_range() && !prev_prev) 
+		if (i == wp.get_range() && !prev) 
 		{
-			return check_AOE(tiles, Position(attack_x, attack_y), tar);
+			// if attacks have a AOE (explode) once they reach their max range they explode
+			if (wp.get_AOE() != 0)
+			{
+				return check_AOE(tiles, Position(attack_x, attack_y), tar);
+			}
+			return false;
 		}
 
 		attack_x += dir[direction][0];
@@ -306,9 +313,4 @@ const std::shared_ptr<std::queue<int>>& Enemy::get_visited_AOE() const
 void Enemy::set_visited_AOE(const std::shared_ptr<std::queue<int>>& _visited_AOE)
 {
 	visited_AOE = _visited_AOE;
-}
-
-void Enemy::print()
-{
-	std::cout << hp << '\n';
 }
