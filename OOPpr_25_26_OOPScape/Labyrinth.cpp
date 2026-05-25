@@ -447,9 +447,10 @@ void Labyrinth::print(std::vector<std::vector<char>> display, std::vector<std::v
 	std::cout << "   ";
 	for (int i = 0; i < tiles.size(); i++)
 	{
+		std::cout << ' ';
 		if (i < 10)
 		{
-			std::cout << ' ' << i;
+			std::cout << i << ' ';
 		}
 		else
 		{
@@ -457,7 +458,7 @@ void Labyrinth::print(std::vector<std::vector<char>> display, std::vector<std::v
 		}
 	}
 	std::cout << "\n   ";
-	for (int i = 0; i < tiles.size(); i++) std::cout << "__";
+	for (int i = 0; i < tiles.size(); i++) std::cout << "___";
 	std::cout << '\n';
 	for (int i = 0; i < tiles.size(); i++)
 	{
@@ -474,21 +475,25 @@ void Labyrinth::print(std::vector<std::vector<char>> display, std::vector<std::v
 		{
 			if (colored[i][j]) 
 			{
-				std::cout << ' ' << "\033[48;2;235;75;12m" << display[i][j] << "\033[0m";
+				std::cout << ' ' << "\033[48;2;235;75;12m" << display[i][j] << "\033[0m" << ' ';
 			}
 			else 
 			{
-				std::cout << ' ' << display[i][j];
+				std::cout << ' ' << display[i][j] << ' ';
 			}
 		}
 		std::cout << '\n';
 	}
+
+	std::cout << "-------\n";
 	(*hero.get()).print();
 
 	for (int i = 0; i < enemies.size(); i++) 
 	{
+		std::cout << "-------\n";
 		(*enemies[i].get()).print();
 	}
+	std::cout << "-------\n";
 }
 
 Labyrinth::Labyrinth(const char* file_name) : move_counter(0)
