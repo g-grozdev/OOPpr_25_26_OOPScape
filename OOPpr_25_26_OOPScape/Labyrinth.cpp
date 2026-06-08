@@ -1,10 +1,18 @@
 #include "Labyrinth.h"
 
-bool Labyrinth::create_from_character(char character, int x, int y, int row)
+bool Labyrinth::create_from_character(char character, int x, int y, int row, bool has_end_already)
 {
+	if (character == '\n' || character == '\0')
+	{
+		throw GameFileLayoutException("labyrinth layout does not fit dimensions", x, y);
+	}
 	bool has_end = false;
 	if (character == 'F')
 	{
+		if (has_end_already) 
+		{
+			throw GameFileException("labyrinth has more than one exit");
+		}
 		has_end = true;
 		tiles[row].push_back(TileFactory::create_tile(character, x, y));
 	}
@@ -606,13 +614,16 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0), affected_tiles_co
 			{
 				file.get(current);
 			}
-			has_end |= create_from_character(current, i, j, i);
+			has_end |= create_from_character(current, i, j, i, has_end);
 		}
-		if (file.get() != '\n')
+		if (i != size - 1 && file.get() != '\n')
 		{
 			throw GameFileLayoutException("labyrinth layout does not fit dimensions", i, size);
 		}
 	}
+
+	// to read last character so EOF gets recognized
+	file.get();
 
 	if (!has_end)
 	{

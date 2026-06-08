@@ -28,7 +28,7 @@ class Labyrinth
 	const std::string affected_tiles_color_reset;
 	int move_counter;
 
-	bool create_from_character(char character, int x, int y, int row);
+	bool create_from_character(char character, int x, int y, int row, bool has_end_already);
 	void create_prev_and_visited(int size);
 	void create_display_and_colored(int size);
 	int convert_coordinates(int x, int y, int n);
