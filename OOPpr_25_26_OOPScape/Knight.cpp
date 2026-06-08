@@ -16,6 +16,11 @@ void Knight::take_damage(int dmg)
 	}
 }
 
+void Knight::get_affected_by_ability_tiles(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero, std::queue<Position>& affected_tiles)
+{
+	affected_tiles.push(Position(x, y));
+}
+
 bool Knight::ability(const std::vector<std::vector<Tile>>& tiles, std::shared_ptr<Target>& tar, const std::shared_ptr<Hero>& hero)
 {
 	if (last_used_ability != -1 && move_counter - last_used_ability <= ability_cooldown) return false;
