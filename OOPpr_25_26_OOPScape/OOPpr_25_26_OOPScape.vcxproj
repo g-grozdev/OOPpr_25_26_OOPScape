@@ -132,6 +132,10 @@
     <ClCompile Include="Damageable.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
+    <ClCompile Include="GameFileCharacterException.cpp" />
+    <ClCompile Include="GameFileDimensionsException.cpp" />
+    <ClCompile Include="GameFileException.cpp" />
+    <ClCompile Include="GameFileLayoutException.cpp" />
     <ClCompile Include="Giant.cpp" />
     <ClCompile Include="Hero.cpp" />
     <ClCompile Include="HeroFactory.cpp" />
@@ -154,6 +158,10 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyFactory.h" />
+    <ClInclude Include="GameFileCharacterException.h" />
+    <ClInclude Include="GameFileDimensionsException.h" />
+    <ClInclude Include="GameFileException.h" />
+    <ClInclude Include="GameFileLayoutException.h" />
     <ClInclude Include="Giant.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="HeroFactory.h" />

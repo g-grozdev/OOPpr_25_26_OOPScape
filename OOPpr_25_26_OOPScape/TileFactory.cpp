@@ -25,7 +25,7 @@ Tile TileFactory::create_tile(char tile_type, int x, int y)
 		result = Tile(x, y, Effect::NONE, true, true, tile_type);
 		break;
 	default:
-		throw GameFileException("labyrinth has invalid tile type");
+		throw GameFileCharacterException("labyrinth has invalid tile type", "tile", tile_type);
 		break;
 	}
 

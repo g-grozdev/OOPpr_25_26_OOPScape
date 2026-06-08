@@ -610,7 +610,7 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0), affected_tiles_co
 		}
 		if (file.get() != '\n')
 		{
-			throw GameFileLayoutException("labyrinth layout does not fit dimensions", i + 1, 0);
+			throw GameFileLayoutException("labyrinth layout does not fit dimensions", i, size);
 		}
 	}
 

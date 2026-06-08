@@ -2,7 +2,7 @@
 #include "Knight.h"
 #include "Wizard.h"
 #include "Archer.h"
-#include "GameFileException.h"
+#include "GameFileCharacterException.h"
 
 class HeroFactory
 {
