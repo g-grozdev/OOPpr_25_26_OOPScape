@@ -1,5 +1,6 @@
 #pragma once
 #include "Tile.h"
+#include "GameFileException.h"
 
 class TileFactory
 {

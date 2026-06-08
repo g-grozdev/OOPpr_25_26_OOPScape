@@ -2,6 +2,7 @@
 #include "Giant.h"
 #include "Thief.h"
 #include "Skeleton.h"
+#include "GameFileException.h"
 
 class EnemyFactory
 {

@@ -12,7 +12,7 @@ bool Labyrinth::create_from_character(char character, int x, int y, int row)
 	{
 		if (hero != nullptr)
 		{
-			// throw exception of invalid file;
+			throw GameFileException("labyrinth has more than one hero");
 		}
 		hero = HeroFactory::create_hero(character, x, y, move_counter);
 		target = hero;
@@ -568,13 +568,13 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0), affected_tiles_co
 
 	if (!file.is_open())
 	{
-		// throw exception of being unable to open file;
+		throw GameFileException("file does not exist");
 	}
 
 	int size = -1;
 	if (file.eof())
 	{
-		// throw exception of invalid file;
+		throw GameFileException("file does not contain dimensions of labyrinth");
 	}
 	else
 	{
@@ -585,7 +585,7 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0), affected_tiles_co
 
 	if (size < 2 || size > 64)
 	{
-		// throw exception of invalid file;
+		throw GameFileException("dimensions of labyrinth are out of the allowed bounds (2, 64)");
 	}
 
 	bool has_end = false;
@@ -597,7 +597,7 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0), affected_tiles_co
 			char current = '\0';
 			if (file.eof())
 			{
-				// throw exception of invalid file;
+				throw GameFileException("labyrinth layout does not fit dimensions");
 			}
 			else
 			{
@@ -608,9 +608,19 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0), affected_tiles_co
 		file.get();
 	}
 
-	if (!has_end || hero == nullptr || !file.eof())
+	if (!has_end)
 	{
-		// throw exception of invalid file;
+		throw GameFileException("labyrinth does not have target destination");
+	}
+
+	if (hero == nullptr) 
+	{
+		throw GameFileException("labyrinth does not have a hero");
+	}
+
+	if (!file.eof()) 
+	{
+		throw GameFileException("labyrinth layout does not fit dimensions");
 	}
 
 	create_prev_and_visited(size);

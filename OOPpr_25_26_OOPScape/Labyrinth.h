@@ -9,6 +9,7 @@
 #include "HeroFactory.h"
 #include "EnemyFactory.h"
 #include "TileFactory.h"
+#include "GameFileException.h"
 
 class Labyrinth
 {

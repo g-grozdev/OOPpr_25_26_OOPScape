@@ -16,7 +16,7 @@ std::unique_ptr<Enemy> EnemyFactory::create_enemy(char enemy_type, int x, int y,
 		result = std::make_unique<Skeleton>(x, y, m_c);
 		break;
 	default:
-		// throw invalid enemy type
+		throw GameFileException("labyrinth has invalid enemy type");
 		break;
 	}
 

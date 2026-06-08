@@ -16,7 +16,7 @@ std::shared_ptr<Hero> HeroFactory::create_hero(char hero_type, int x, int y, con
 		result = std::make_shared<Wizard>(x, y, m_c);
 		break;
 	default:
-		// throw and invalid hero type exception;
+		throw GameFileException("labyrinth has invalid hero type");
 		break;
 	}
 
