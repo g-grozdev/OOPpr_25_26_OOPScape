@@ -10,6 +10,8 @@
 #include "EnemyFactory.h"
 #include "TileFactory.h"
 #include "GameFileException.h"
+#include "GameFileDimensionsException.h"
+#include "GameFileLayoutException.h"
 
 class Labyrinth
 {

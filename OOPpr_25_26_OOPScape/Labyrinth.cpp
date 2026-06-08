@@ -579,13 +579,16 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0), affected_tiles_co
 	else
 	{
 		file >> size;
-		file.get();
+		if (file.get() != '\n') 
+		{
+			throw GameFileLayoutException("labyrinth layout does not fit dimensions", 0, 0);
+		}
 	}
 	Position::set_max(size);
 
 	if (size < 2 || size > 64)
 	{
-		throw GameFileException("dimensions of labyrinth are out of the allowed bounds (2, 64)");
+		throw GameFileDimensionsException("dimensions of labyrinth are out of the allowed bounds", size);
 	}
 
 	bool has_end = false;
@@ -597,7 +600,7 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0), affected_tiles_co
 			char current = '\0';
 			if (file.eof())
 			{
-				throw GameFileException("labyrinth layout does not fit dimensions");
+				throw GameFileLayoutException("labyrinth layout does not fit dimensions", i, j);
 			}
 			else
 			{
@@ -605,7 +608,10 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0), affected_tiles_co
 			}
 			has_end |= create_from_character(current, i, j, i);
 		}
-		file.get();
+		if (file.get() != '\n')
+		{
+			throw GameFileLayoutException("labyrinth layout does not fit dimensions", i + 1, 0);
+		}
 	}
 
 	if (!has_end)
@@ -620,7 +626,7 @@ Labyrinth::Labyrinth(const char* file_name) : move_counter(0), affected_tiles_co
 
 	if (!file.eof()) 
 	{
-		throw GameFileException("labyrinth layout does not fit dimensions");
+		throw GameFileLayoutException("labyrinth layout does not fit dimensions", size, 0);
 	}
 
 	create_prev_and_visited(size);

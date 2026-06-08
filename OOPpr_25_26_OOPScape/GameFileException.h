@@ -4,6 +4,8 @@
 
 class GameFileException : public std::exception
 {
+
+protected:
 	std::string message;
 
 public:
