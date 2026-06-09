@@ -187,10 +187,14 @@ int Labyrinth::play_game_state()
 	{
 		if (!success)
 		{
+			print();
+			reset_affected_tiles_color();
 			std::cout << "invalid action please try again\n";
 		}
 		success = get_player_action();
 	} while (!success);
+
+	Sleep(650);
 
 	print();
 	reset_affected_tiles_color();
@@ -243,7 +247,7 @@ bool Labyrinth::get_player_action()
 		set_affected_tiles_color_ability();
 		(*hero.get()).get_affected_by_ability_tiles(tiles, target, hero, affected_tiles);
 		print();
-		Sleep(650);
+		//Sleep(650);
 		return (*hero.get()).ability(tiles, target, hero);
 	}
 	else if (command == "S") 
