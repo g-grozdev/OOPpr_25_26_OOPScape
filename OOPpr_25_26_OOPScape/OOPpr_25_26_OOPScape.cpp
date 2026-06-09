@@ -5,14 +5,62 @@ int main()
 {
 	try 
 	{
-		Labyrinth lab("test1.txt");
-		if (lab.play() == 1)
+		int selection = -1;
+		while (selection != 5) 
 		{
-			std::cout << "you escaped successfully!";
-		}
-		else
-		{
-			std::cout << "you have been defeated!";
+			std::cout << "please select an option:\n1 - Knight\n2 - Archer\n3 - Wizard\n4 - custom\n5 - quit\n";
+			std::cin >> selection;
+			while (std::cin.fail() || selection < 1 || selection > 5)
+			{
+				std::cin.clear();
+				std::cin.ignore(10000, '\n');
+				std::cout << "options are only between 1 and 5\n";
+				std::cin >> selection;
+			}
+
+			int result = 0;
+			// blocked scopes are needed to prevent bypass transfer error (variables may not be initialized, yet used later on, in switch case)
+			switch (selection)
+			{
+			case 1:
+			{
+				Labyrinth lab("knight.txt");
+				result = lab.play();
+			}
+				break;
+			case 2:
+			{
+				Labyrinth lab("archer.txt");
+				result = lab.play();
+			}
+				break;
+			case 3:
+			{
+				Labyrinth lab("wizard.txt");
+				result = lab.play();
+			}
+				break;
+			case 4:
+			{
+				Labyrinth lab("custom.txt");
+				result = lab.play();
+			}
+				break;
+			case 5:
+				break;
+			default:
+				throw GameFileException("game option does not exist");
+				break;
+			}
+
+			if (result == 1)
+			{
+				std::cout << "you escaped successfully!\n";
+			}
+			else if (result == -1)
+			{
+				std::cout << "you have been defeated!\n";
+			}
 		}
 	}
 	catch (const GameFileDimensionsException& ex) 
