@@ -42,7 +42,7 @@ class Labyrinth
 	void get_display(int n);
 
 	int play_game_state();
-	bool get_player_action();
+	int get_player_action();
 	int check_state();
 	bool apply_attack(const Weapon& wp, bool hero_or_enemy);
 	bool is_in_bounds(int x, int y, int n);

@@ -151,7 +151,7 @@ int Labyrinth::play_game_state()
 	print();
 	reset_affected_tiles_color();
 
-	bool success = true;
+	int success = 1;
 	do
 	{
 		if (!success) 
@@ -182,19 +182,20 @@ int Labyrinth::play_game_state()
 	reset_affected_tiles_color();
 
 	// apply player action
-	success = true;
+	success = 1;
 	do
 	{
 		if (!success)
 		{
-			print();
 			reset_affected_tiles_color();
+			print();
 			std::cout << "invalid action please try again\n";
 		}
 		success = get_player_action();
 	} while (!success);
 
-	Sleep(650);
+	// ability stays on screen
+	if (success == 2) Sleep(650);
 
 	print();
 	reset_affected_tiles_color();
@@ -225,7 +226,7 @@ int Labyrinth::play_game_state()
 	return 0;
 }
 
-bool Labyrinth::get_player_action()
+int Labyrinth::get_player_action()
 {
 	std::cout << "Enter a command for an action : X (attack) ; A (ability) ; S (skip action)\n";
 	std::string command = "";
@@ -240,7 +241,7 @@ bool Labyrinth::get_player_action()
 	{
 		set_affected_tiles_color_attack();
 		affected_tiles_color = "\033[48;2;224;55;29m";
-		return apply_attack((*hero.get()).attack(tiles, target, hero), true);
+		return (apply_attack((*hero.get()).attack(tiles, target, hero), true) == 1 ? 1 : 0);
 	}
 	else if (command == "A") 
 	{
@@ -248,15 +249,15 @@ bool Labyrinth::get_player_action()
 		(*hero.get()).get_affected_by_ability_tiles(tiles, target, hero, affected_tiles);
 		print();
 		//Sleep(650);
-		return (*hero.get()).ability(tiles, target, hero);
+		return ((*hero.get()).ability(tiles, target, hero) == 1 ? 2 : 0);
 	}
 	else if (command == "S") 
 	{
 		reset_affected_tiles_color();
-		return true;
+		return 3;
 	}
 
-	return false;
+	return 0;
 }
 
 int Labyrinth::check_state()
