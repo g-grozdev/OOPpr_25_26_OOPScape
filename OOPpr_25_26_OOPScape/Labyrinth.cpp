@@ -248,7 +248,6 @@ int Labyrinth::get_player_action()
 		set_affected_tiles_color_ability();
 		(*hero.get()).get_affected_by_ability_tiles(tiles, target, hero, affected_tiles);
 		print();
-		//Sleep(650);
 		return ((*hero.get()).ability(tiles, target, hero) == 1 ? 2 : 0);
 	}
 	else if (command == "S") 
