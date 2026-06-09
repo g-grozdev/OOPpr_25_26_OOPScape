@@ -1,3 +1,5 @@
+// github link: https://github.com/g-grozdev/OOPpr_25_26_OOPScape
+
 #include <iostream>
 #include "Labyrinth.h"
 
